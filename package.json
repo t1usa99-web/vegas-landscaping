@@ -9,6 +9,9 @@
     "start": "node ./dist/server/entry.mjs",
     "preview": "astro preview"
   },
+  "engines": {
+    "node": ">=20.0.0"
+  },
   "dependencies": {
     "@anthropic-ai/sdk": "^0.39.0",
     "@astrojs/node": "^9.0.0",
