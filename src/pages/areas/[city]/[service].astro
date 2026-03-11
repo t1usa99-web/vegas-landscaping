@@ -1,0 +1,1121 @@
+---
+import { services, getService, getRelatedServices } from '../../../data/services.js';
+import { cities, getCity, getNearbyCities } from '../../../data/cities.js';
+
+const { city: citySlug, service: serviceSlug } = Astro.params;
+
+const service = getService(serviceSlug);
+const city = getCity(citySlug);
+
+if (!service || !city) {
+  return Astro.redirect('/');
+}
+
+const relatedServices = getRelatedServices(serviceSlug);
+const nearbyCities = getNearbyCities(citySlug);
+
+const pageTitle = `${service.name} in ${city.name}, NV | Las Vegas Landscaping`;
+const pageDesc = `${service.metaDesc} Serving ${city.name} and all surrounding areas.`;
+
+// All services for the sidebar nav
+const allServices = services.filter(s => s.slug !== serviceSlug);
+---
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>{pageTitle}</title>
+  <meta name="description" content={pageDesc} />
+  <meta name="robots" content="index, follow" />
+  <link rel="canonical" href={`https://lasvegaslandscaping.homepropeople.com/areas/${citySlug}/${serviceSlug}`} />
+  <link rel="alternate" hreflang="en" href={`https://lasvegaslandscaping.homepropeople.com/areas/${citySlug}/${serviceSlug}`} />
+  <link rel="alternate" hreflang="es" href={`https://lasvegaslandscaping.homepropeople.com/es/areas/${citySlug}/${serviceSlug}`} />
+  <link rel="alternate" hreflang="x-default" href={`https://lasvegaslandscaping.homepropeople.com/areas/${citySlug}/${serviceSlug}`} />
+
+  <!-- Open Graph -->
+  <meta property="og:url" content={`https://lasvegaslandscaping.homepropeople.com/areas/${citySlug}/${serviceSlug}`} />
+  <meta property="og:title" content={pageTitle} />
+  <meta property="og:description" content={pageDesc} />
+  <meta property="og:type" content="website" />
+
+  <!-- JSON-LD -->
+  <script type="application/ld+json" set:html={JSON.stringify({
+    "@context": "https://schema.org",
+    "@type": "LocalBusiness",
+    "name": "Las Vegas Landscaping",
+    "description": pageDesc,
+    "areaServed": city.name,
+    "serviceType": service.name,
+    "telephone": "(702) 528-8324",
+    "address": { "@type": "PostalAddress", "addressLocality": city.name, "addressRegion": "NV", "addressCountry": "US" }
+  })} />
+  <script type="application/ld+json" set:html={JSON.stringify({
+    "@context": "https://schema.org",
+    "@type": "BreadcrumbList",
+    "itemListElement": [
+      { "@type": "ListItem", "position": 1, "name": "Home", "item": "https://lasvegaslandscaping.homepropeople.com/" },
+      { "@type": "ListItem", "position": 2, "name": "Service Areas", "item": "https://lasvegaslandscaping.homepropeople.com/areas" },
+      { "@type": "ListItem", "position": 3, "name": city.name, "item": `https://lasvegaslandscaping.homepropeople.com/areas/${citySlug}` },
+      { "@type": "ListItem", "position": 4, "name": service.name, "item": `https://lasvegaslandscaping.homepropeople.com/areas/${citySlug}/${serviceSlug}` }
+    ]
+  })} />
+
+  <style>
+    /* ── Design Tokens ───────────────────────── */
+    :root {
+      --g900: #0f2a1e;
+      --g800: #1a4731;
+      --g700: #2d6b4e;
+      --g100: #e8f4ee;
+      --gold: #d4a017;
+      --gold2: #f0c040;
+      --sand: #faf8f4;
+      --text: #1a1a1a;
+      --muted: #666;
+      --radius: 12px;
+      --shadow: 0 4px 24px rgba(0,0,0,0.1);
+    }
+
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+    html { scroll-behavior: smooth; }
+    body { font-family: 'Segoe UI', system-ui, sans-serif; color: var(--text); background: #fff; }
+
+    /* ── Header ───────────────────────────────── */
+    .site-header {
+      background: var(--g800);
+      position: sticky;
+      top: 0;
+      z-index: 100;
+      box-shadow: 0 2px 12px rgba(0,0,0,0.2);
+    }
+    .header-inner {
+      max-width: 1280px;
+      margin: 0 auto;
+      padding: 0 24px;
+      height: 64px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+    }
+    .logo { display: flex; align-items: center; gap: 10px; text-decoration: none; }
+    .logo-icon { width: 36px; height: 36px; background: var(--gold); border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 1.1rem; }
+    .logo-text { color: #fff; font-weight: 700; font-size: 1rem; line-height: 1.1; }
+    .logo-sub { color: rgba(255,255,255,0.6); font-size: 0.7rem; font-weight: 400; }
+    nav { display: flex; align-items: center; gap: 24px; }
+    nav a { color: rgba(255,255,255,0.85); text-decoration: none; font-size: 0.9rem; transition: color 0.2s; }
+    nav a:hover { color: var(--gold2); }
+    .btn-call {
+      background: var(--gold);
+      color: #1a1a1a;
+      padding: 8px 18px;
+      border-radius: 8px;
+      font-weight: 700;
+      font-size: 0.875rem;
+      text-decoration: none;
+      white-space: nowrap;
+    }
+
+    /* ── Breadcrumb ───────────────────────────── */
+    .breadcrumb {
+      background: #f5f5f5;
+      border-bottom: 1px solid #e5e5e5;
+      padding: 10px 0;
+    }
+    .breadcrumb-inner {
+      max-width: 1280px;
+      margin: 0 auto;
+      padding: 0 24px;
+      display: flex;
+      align-items: center;
+      gap: 6px;
+      font-size: 0.8rem;
+      color: var(--muted);
+    }
+    .breadcrumb a { color: var(--g700); text-decoration: none; }
+    .breadcrumb a:hover { text-decoration: underline; }
+    .breadcrumb span { color: #999; }
+
+    /* ── Main Layout ──────────────────────────── */
+    .page-wrap {
+      max-width: 1280px;
+      margin: 0 auto;
+      padding: 0 24px;
+      display: grid;
+      grid-template-columns: 1fr 380px;
+      gap: 40px;
+      align-items: start;
+      padding-top: 40px;
+      padding-bottom: 80px;
+    }
+
+    /* ── Left: Hero ───────────────────────────── */
+    .hero-tags { display: flex; gap: 8px; margin-bottom: 16px; flex-wrap: wrap; }
+    .tag {
+      display: inline-flex;
+      align-items: center;
+      gap: 5px;
+      padding: 4px 12px;
+      border-radius: 20px;
+      font-size: 0.75rem;
+      font-weight: 600;
+      text-transform: uppercase;
+      letter-spacing: 0.05em;
+    }
+    .tag-service { background: var(--g100); color: var(--g700); }
+    .tag-city { background: #fff3d4; color: #8a6000; }
+    h1 { font-size: clamp(1.75rem, 3vw, 2.5rem); font-weight: 800; color: var(--g900); line-height: 1.15; margin-bottom: 16px; }
+    .hero-desc { color: #444; font-size: 1.05rem; line-height: 1.7; margin-bottom: 24px; }
+    .rating-badge {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      background: var(--g100);
+      border: 1px solid var(--g700);
+      padding: 8px 16px;
+      border-radius: 8px;
+      font-size: 0.875rem;
+      font-weight: 600;
+      color: var(--g800);
+      margin-bottom: 24px;
+    }
+    .stars { color: var(--gold); }
+    .hero-ctas { display: flex; gap: 12px; flex-wrap: wrap; margin-bottom: 40px; }
+    .btn-primary {
+      background: var(--gold);
+      color: #1a1a1a;
+      padding: 12px 24px;
+      border-radius: 8px;
+      font-weight: 700;
+      font-size: 0.95rem;
+      text-decoration: none;
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+    }
+    .btn-secondary {
+      background: transparent;
+      border: 2px solid var(--g800);
+      color: var(--g800);
+      padding: 12px 24px;
+      border-radius: 8px;
+      font-weight: 700;
+      font-size: 0.95rem;
+      text-decoration: none;
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+    }
+
+    /* ── Content Sections ─────────────────────── */
+    .section { margin-bottom: 48px; }
+    .section h2 { font-size: 1.5rem; font-weight: 800; color: var(--g900); margin-bottom: 20px; }
+    .section p { color: #444; line-height: 1.7; margin-bottom: 14px; }
+
+    .benefits-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 16px;
+    }
+    .benefit-card {
+      background: #fafafa;
+      border: 1px solid #e5e5e5;
+      border-radius: var(--radius);
+      padding: 20px;
+    }
+    .benefit-icon { font-size: 1.5rem; margin-bottom: 8px; }
+    .benefit-title { font-weight: 700; font-size: 0.95rem; color: var(--g900); margin-bottom: 4px; }
+    .benefit-desc { font-size: 0.85rem; color: var(--muted); line-height: 1.5; }
+
+    .process-steps { display: flex; flex-direction: column; gap: 16px; }
+    .process-step {
+      display: flex;
+      gap: 16px;
+      align-items: flex-start;
+      padding: 20px;
+      background: var(--g100);
+      border-radius: var(--radius);
+    }
+    .step-num {
+      width: 36px;
+      height: 36px;
+      background: var(--g800);
+      color: #fff;
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-weight: 800;
+      font-size: 0.9rem;
+      flex-shrink: 0;
+    }
+    .step-title { font-weight: 700; color: var(--g900); margin-bottom: 4px; }
+    .step-desc { font-size: 0.875rem; color: var(--muted); line-height: 1.5; }
+
+    /* ── Right: Estimate Panel ─────────────────── */
+    .estimate-panel {
+      position: sticky;
+      top: 80px;
+      background: #fff;
+      border: 2px solid var(--g800);
+      border-radius: 16px;
+      overflow: hidden;
+      box-shadow: var(--shadow);
+    }
+    .panel-header {
+      background: var(--g800);
+      color: #fff;
+      padding: 20px 24px;
+    }
+    .panel-badge {
+      display: inline-flex;
+      align-items: center;
+      gap: 5px;
+      background: rgba(255,255,255,0.15);
+      padding: 3px 10px;
+      border-radius: 20px;
+      font-size: 0.7rem;
+      font-weight: 700;
+      letter-spacing: 0.05em;
+      text-transform: uppercase;
+      margin-bottom: 10px;
+    }
+    .panel-title { font-size: 1.2rem; font-weight: 800; margin-bottom: 4px; }
+    .panel-sub { font-size: 0.825rem; opacity: 0.8; }
+
+    .panel-body { padding: 24px; }
+
+    /* Step 1: service questions */
+    #step-questions { display: block; }
+    #step-contact { display: none; }
+    #step-loading { display: none; text-align: center; padding: 40px 0; }
+    #step-result { display: none; }
+
+    .question-group { margin-bottom: 18px; }
+    .question-label {
+      display: block;
+      font-size: 0.825rem;
+      font-weight: 700;
+      color: var(--g900);
+      margin-bottom: 8px;
+      line-height: 1.4;
+    }
+    .question-select {
+      width: 100%;
+      padding: 10px 12px;
+      border: 1.5px solid #d0d0d0;
+      border-radius: 8px;
+      font-size: 0.875rem;
+      color: var(--text);
+      background: #fff;
+      appearance: none;
+      background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='8' viewBox='0 0 12 8'%3E%3Cpath fill='%23666' d='M1 1l5 5 5-5'/%3E%3C/svg%3E");
+      background-repeat: no-repeat;
+      background-position: right 12px center;
+      cursor: pointer;
+    }
+    .question-select:focus { outline: none; border-color: var(--g700); box-shadow: 0 0 0 3px rgba(45,107,78,0.15); }
+
+    /* Contact fields */
+    .field-row { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; margin-bottom: 12px; }
+    .field-group { margin-bottom: 12px; }
+    .field-label {
+      display: block;
+      font-size: 0.8rem;
+      font-weight: 700;
+      color: var(--g900);
+      margin-bottom: 5px;
+    }
+    .field-input {
+      width: 100%;
+      padding: 10px 12px;
+      border: 1.5px solid #d0d0d0;
+      border-radius: 8px;
+      font-size: 0.875rem;
+      color: var(--text);
+    }
+    .field-input:focus { outline: none; border-color: var(--g700); box-shadow: 0 0 0 3px rgba(45,107,78,0.15); }
+    .field-textarea {
+      width: 100%;
+      padding: 10px 12px;
+      border: 1.5px solid #d0d0d0;
+      border-radius: 8px;
+      font-size: 0.875rem;
+      color: var(--text);
+      min-height: 80px;
+      resize: vertical;
+      font-family: inherit;
+    }
+
+    .privacy-note {
+      font-size: 0.75rem;
+      color: var(--muted);
+      text-align: center;
+      margin-bottom: 16px;
+    }
+
+    /* Buttons */
+    .btn-continue, .btn-submit {
+      width: 100%;
+      padding: 14px;
+      border: none;
+      border-radius: 8px;
+      font-weight: 700;
+      font-size: 1rem;
+      cursor: pointer;
+      transition: all 0.2s;
+    }
+    .btn-continue { background: var(--gold); color: #1a1a1a; }
+    .btn-continue:hover { background: var(--gold2); }
+    .btn-submit { background: var(--g800); color: #fff; }
+    .btn-submit:hover { background: var(--g900); }
+
+    .back-link {
+      background: none;
+      border: none;
+      color: var(--g700);
+      font-size: 0.8rem;
+      cursor: pointer;
+      padding: 8px 0 0;
+      display: block;
+      text-align: center;
+      text-decoration: underline;
+    }
+
+    /* ── Satellite Scan Loading ───────────────── */
+    #step-loading { display: none; }
+
+    .scan-wrap {
+      position: relative;
+      border-radius: 10px;
+      overflow: hidden;
+      height: 220px;
+      background: #050f08;
+      margin-bottom: 14px;
+      border: 1.5px solid rgba(0, 255, 80, 0.35);
+      box-shadow: 0 0 20px rgba(0, 255, 80, 0.08);
+    }
+
+    #scan-img {
+      position: absolute;
+      top: 0; left: 0;
+      width: 100%; height: 100%;
+      object-fit: cover;
+      border: none;
+      filter: saturate(1.2) brightness(0.92) contrast(1.08);
+      transition: opacity 0.6s ease;
+    }
+
+    .scan-ui {
+      position: absolute;
+      top: 0; left: 0; right: 0; bottom: 0;
+      pointer-events: none;
+      z-index: 5;
+    }
+
+    /* Subtle grid overlay */
+    .scan-ui::before {
+      content: '';
+      position: absolute;
+      top: 0; left: 0; right: 0; bottom: 0;
+      background:
+        repeating-linear-gradient(0deg, transparent, transparent 39px, rgba(0,255,80,0.07) 40px),
+        repeating-linear-gradient(90deg, transparent, transparent 39px, rgba(0,255,80,0.07) 40px);
+    }
+
+    /* Green tint overlay */
+    .scan-ui::after {
+      content: '';
+      position: absolute;
+      top: 0; left: 0; right: 0; bottom: 0;
+      background: rgba(0, 255, 80, 0.04);
+    }
+
+    /* Moving laser line */
+    .scan-line {
+      position: absolute;
+      left: 0; right: 0;
+      height: 2px;
+      background: linear-gradient(to right,
+        transparent 0%,
+        rgba(0,255,80,0) 8%,
+        rgba(0,255,80,0.95) 50%,
+        rgba(0,255,80,0) 92%,
+        transparent 100%);
+      box-shadow: 0 0 8px 4px rgba(0,255,80,0.45), 0 0 28px 8px rgba(0,255,80,0.15);
+      animation: laserScan 2.2s linear infinite;
+      z-index: 10;
+    }
+
+    @keyframes laserScan {
+      0%   { top: 0%; }
+      100% { top: 100%; }
+    }
+
+    /* Targeting corner brackets */
+    .scan-corner { position: absolute; width: 14px; height: 14px; border-color: rgba(0,255,80,0.9); border-style: solid; z-index: 11; }
+    .scan-corner-tl { top: 8px; left: 8px;   border-width: 2px 0 0 2px; }
+    .scan-corner-tr { top: 8px; right: 8px;  border-width: 2px 2px 0 0; }
+    .scan-corner-bl { bottom: 32px; left: 8px;  border-width: 0 0 2px 2px; }
+    .scan-corner-br { bottom: 32px; right: 8px; border-width: 0 2px 2px 0; }
+
+    /* Status bar */
+    .scan-status-bar {
+      position: absolute;
+      bottom: 0; left: 0; right: 0;
+      background: rgba(0,0,0,0.82);
+      border-top: 1px solid rgba(0,255,80,0.3);
+      padding: 5px 10px;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      z-index: 12;
+    }
+    .scan-dot {
+      width: 7px; height: 7px;
+      background: rgba(0,255,80,0.95);
+      border-radius: 50%;
+      flex-shrink: 0;
+      animation: scanPulse 0.9s ease-in-out infinite;
+    }
+    @keyframes scanPulse {
+      0%, 100% { opacity: 1; transform: scale(1); }
+      50% { opacity: 0.35; transform: scale(0.65); }
+    }
+    .scan-status-text {
+      font-family: 'Courier New', monospace;
+      font-size: 0.65rem;
+      color: rgba(0,255,80,0.95);
+      letter-spacing: 0.07em;
+      flex: 1;
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+    }
+    .scan-coords {
+      font-family: 'Courier New', monospace;
+      font-size: 0.6rem;
+      color: rgba(0,255,80,0.5);
+      white-space: nowrap;
+    }
+
+    .loading-subtext {
+      font-size: 0.8rem;
+      color: var(--muted);
+      text-align: center;
+      line-height: 1.6;
+    }
+
+    /* Result */
+    .result-badge {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      background: #d4edda;
+      color: #155724;
+      padding: 5px 12px;
+      border-radius: 20px;
+      font-size: 0.75rem;
+      font-weight: 700;
+      margin-bottom: 12px;
+    }
+    .result-name { font-size: 1rem; font-weight: 700; color: var(--g900); margin-bottom: 4px; }
+    .result-summary { font-size: 0.825rem; color: #444; line-height: 1.6; margin-bottom: 16px; }
+    .result-total-label { font-size: 0.7rem; font-weight: 700; text-transform: uppercase; letter-spacing: 0.08em; color: var(--muted); margin-bottom: 4px; }
+    .result-total {
+      font-size: 1.75rem;
+      font-weight: 900;
+      color: var(--g800);
+      background: var(--g100);
+      border: 2px solid var(--g700);
+      padding: 10px 16px;
+      border-radius: 8px;
+      margin-bottom: 4px;
+    }
+    .result-timeline { font-size: 0.8rem; color: var(--muted); margin-bottom: 16px; }
+    .result-items { display: flex; flex-direction: column; gap: 8px; margin-bottom: 16px; }
+    .result-item {
+      display: flex;
+      justify-content: space-between;
+      align-items: flex-start;
+      padding: 10px 12px;
+      background: #fafafa;
+      border-radius: 8px;
+      font-size: 0.825rem;
+      gap: 8px;
+    }
+    .result-item-name { font-weight: 600; color: var(--g900); }
+    .result-item-desc { font-size: 0.75rem; color: var(--muted); margin-top: 2px; }
+    .result-item-price { font-weight: 700; color: var(--g800); white-space: nowrap; }
+    .result-notes { background: var(--g100); border-radius: 8px; padding: 12px; margin-bottom: 16px; }
+    .result-notes-title { font-size: 0.7rem; font-weight: 700; text-transform: uppercase; letter-spacing: 0.08em; color: var(--g700); margin-bottom: 8px; }
+    .result-note { font-size: 0.8rem; color: #444; margin-bottom: 4px; display: flex; gap: 6px; }
+    .result-note::before { content: '✓'; color: var(--g700); font-weight: 700; flex-shrink: 0; }
+    .result-cta {
+      display: block;
+      text-align: center;
+      background: var(--g800);
+      color: #fff;
+      padding: 14px;
+      border-radius: 8px;
+      font-weight: 700;
+      text-decoration: none;
+      font-size: 0.95rem;
+    }
+    .result-disclaimer { font-size: 0.7rem; color: var(--muted); text-align: center; margin-top: 10px; line-height: 1.5; }
+
+    .error-box {
+      background: #fff3f3;
+      border: 1.5px solid #f5c6cb;
+      color: #721c24;
+      padding: 12px;
+      border-radius: 8px;
+      font-size: 0.85rem;
+      margin-bottom: 12px;
+    }
+
+    /* ── Sidebar ──────────────────────────────── */
+    .sidebar-section {
+      background: #fafafa;
+      border: 1px solid #e5e5e5;
+      border-radius: var(--radius);
+      padding: 20px;
+      margin-top: 24px;
+    }
+    .sidebar-title { font-size: 0.75rem; font-weight: 700; text-transform: uppercase; letter-spacing: 0.08em; color: var(--g700); margin-bottom: 14px; border-bottom: 2px solid var(--g700); padding-bottom: 8px; }
+    .sidebar-links { display: flex; flex-direction: column; gap: 6px; }
+    .sidebar-link {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      text-decoration: none;
+      color: var(--g700);
+      font-size: 0.875rem;
+      padding: 6px 0;
+      border-bottom: 1px solid #eee;
+      transition: color 0.2s;
+    }
+    .sidebar-link:hover { color: var(--g900); }
+    .sidebar-link:last-child { border-bottom: none; }
+    .sidebar-icon { font-size: 0.9rem; }
+
+    /* ── Starting Price Banner ─────────────────── */
+    .price-banner {
+      background: linear-gradient(135deg, var(--g800), var(--g700));
+      color: #fff;
+      border-radius: var(--radius);
+      padding: 16px 20px;
+      margin-bottom: 24px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+    }
+    .price-banner-label { font-size: 0.7rem; text-transform: uppercase; letter-spacing: 0.08em; opacity: 0.8; }
+    .price-banner-value { font-size: 1.3rem; font-weight: 800; }
+    .price-banner-note { font-size: 0.7rem; opacity: 0.7; }
+
+    /* ── Responsive ───────────────────────────── */
+    @media (max-width: 900px) {
+      .page-wrap { grid-template-columns: 1fr; }
+      .estimate-panel { position: static; }
+      .benefits-grid { grid-template-columns: 1fr; }
+    }
+    @media (max-width: 600px) {
+      nav { display: none; }
+      .field-row { grid-template-columns: 1fr; }
+    }
+  </style>
+</head>
+<body>
+
+<!-- Header -->
+<header class="site-header">
+  <div class="header-inner">
+    <a href="/" class="logo">
+      <div class="logo-icon">🌵</div>
+      <div>
+        <div class="logo-text">Las Vegas Landscaping</div>
+        <div class="logo-sub">Licensed • Insured</div>
+      </div>
+    </a>
+    <nav>
+      <a href="/#services">Services</a>
+      <a href="/areas">Service Areas</a>
+      <a href="/#estimate">Free Estimate</a>
+      <a href="tel:7025288324" class="btn-call">📞 (702) 528-8324</a>
+    </nav>
+  </div>
+</header>
+
+<!-- Breadcrumb -->
+<div class="breadcrumb">
+  <div class="breadcrumb-inner">
+    <a href="/">Home</a>
+    <span>/</span>
+    <a href="/areas">Service Areas</a>
+    <span>/</span>
+    <a href={`/areas/${citySlug}`}>{city.name}</a>
+    <span>/</span>
+    <strong>{service.shortName}</strong>
+  </div>
+</div>
+
+<!-- Main Content -->
+<div class="page-wrap">
+
+  <!-- LEFT COLUMN -->
+  <div class="left-col">
+
+    <!-- Hero -->
+    <div class="hero-tags">
+      <span class="tag tag-service">{service.emoji} {service.category}</span>
+      <span class="tag tag-city">📍 {city.name}, NV</span>
+    </div>
+
+    <h1>{service.name} in {city.name}</h1>
+
+    <p class="hero-desc">{service.heroDesc}</p>
+
+    <div class="rating-badge">
+      <span class="stars">★★★★★</span>
+      4.9/5 &bull; 500+ Reviews &bull; Serving {city.name}
+    </div>
+
+    <div class="hero-ctas">
+      <a href="tel:7025288324" class="btn-primary">📞 Call (702) 528-8324</a>
+      <a href="#estimate-panel" class="btn-secondary">Get AI Estimate →</a>
+    </div>
+
+    <!-- Price Banner -->
+    <div class="price-banner">
+      <div>
+        <div class="price-banner-label">Starting From</div>
+        <div class="price-banner-value">{service.startingPrice}</div>
+        <div class="price-banner-note">Final pricing based on site assessment</div>
+      </div>
+      <div style="font-size: 2rem; opacity: 0.3">{service.emoji}</div>
+    </div>
+
+    <!-- About section -->
+    <div class="section">
+      <h2>{service.name} Services in {city.name}, Nevada</h2>
+      <p>
+        When you need {service.shortName.toLowerCase()} in {city.name}, trust the team at Las Vegas Landscaping.
+        With over 20 years of experience across the Las Vegas Valley, we understand the unique challenges
+        that {city.name} properties face — from the desert climate to {city.hoaNote.toLowerCase()}.
+      </p>
+      <p>
+        {city.localNote}. Every project is designed specifically for the Mojave Desert environment,
+        ensuring your landscaping not only looks great on install day but thrives through 115°F summers,
+        monsoon season, and decades of desert weather.
+      </p>
+      <p>
+        We're fully licensed, bonded, and insured in Nevada. All work is permitted where required,
+        and we handle every HOA submission and approval document so you don't have to.
+      </p>
+    </div>
+
+    <!-- Why Choose Us -->
+    <div class="section">
+      <h2>Why Choose Us for {service.shortName} in {city.name}?</h2>
+      <div class="benefits-grid">
+        {service.whyUs.map(b => (
+          <div class="benefit-card">
+            <div class="benefit-icon">{b.icon}</div>
+            <div class="benefit-title">{b.title}</div>
+            <div class="benefit-desc">{b.desc}</div>
+          </div>
+        ))}
+      </div>
+    </div>
+
+    <!-- Process -->
+    <div class="section">
+      <h2>Our {service.shortName} Process</h2>
+      <div class="process-steps">
+        {service.process.map((step, i) => (
+          <div class="process-step">
+            <div class="step-num">{i + 1}</div>
+            <div>
+              <div class="step-title">{step.title}</div>
+              <div class="step-desc">{step.desc}</div>
+            </div>
+          </div>
+        ))}
+      </div>
+    </div>
+
+    <!-- Sidebar links (mobile) -->
+    <div class="sidebar-section" style="display:none" id="mobile-sidebar">
+      <!-- populated by JS on mobile -->
+    </div>
+
+  </div>
+
+  <!-- RIGHT COLUMN: Estimate Panel + Sidebar -->
+  <div class="right-col">
+
+    <!-- Estimate Panel -->
+    <div class="estimate-panel" id="estimate-panel">
+      <div class="panel-header">
+        <div class="panel-badge">✨ AI-Powered Estimate</div>
+        <div class="panel-title">Get a Free AI Estimate</div>
+        <div class="panel-sub">Answer a few quick questions about your {city.name} project</div>
+      </div>
+
+      <div class="panel-body">
+
+        <!-- STEP 1: Service-specific questions -->
+        <div id="step-questions">
+          {service.questions.map((q, qi) => (
+            <div class="question-group">
+              <label class="question-label" for={`q${qi}`}>{qi + 1}. {q.q}</label>
+              <select class="question-select" id={`q${qi}`} name={`q${qi}`}>
+                <option value="">Select an option</option>
+                {q.options.map(opt => (
+                  <option value={opt}>{opt}</option>
+                ))}
+              </select>
+            </div>
+          ))}
+          <button class="btn-continue" onclick="goToContact()">Continue →</button>
+        </div>
+
+        <!-- STEP 2: Contact info -->
+        <div id="step-contact">
+          <div class="field-row">
+            <div class="field-group">
+              <label class="field-label" for="firstName">First Name *</label>
+              <input class="field-input" type="text" id="firstName" placeholder="Maria" required />
+            </div>
+            <div class="field-group">
+              <label class="field-label" for="lastName">Last Name</label>
+              <input class="field-input" type="text" id="lastName" placeholder="Garcia" />
+            </div>
+          </div>
+          <div class="field-row">
+            <div class="field-group">
+              <label class="field-label" for="phone">Phone *</label>
+              <input class="field-input" type="tel" id="phone" placeholder="(702) 528-8324" required />
+            </div>
+            <div class="field-group">
+              <label class="field-label" for="email">Email</label>
+              <input class="field-input" type="email" id="email" placeholder="you@email.com" />
+            </div>
+          </div>
+          <div class="field-group">
+            <label class="field-label" for="streetAddress">🛰️ Property Address <small style="font-weight:400;color:#999">(Street, City, State, ZIP — enables satellite view)</small></label>
+            <input class="field-input" type="text" id="streetAddress" placeholder="e.g. 2150 E Serene Ave, Henderson, NV 89074" />
+          </div>
+          <div class="field-group">
+            <label class="field-label" for="notes">Anything else we should know? <small style="font-weight:400;color:#999">(Optional)</small></label>
+            <textarea class="field-textarea" id="notes" placeholder={`Budget range, HOA details, access notes...`}></textarea>
+          </div>
+          <p class="privacy-note">🔒 Your info is private and only used to follow up on your project.</p>
+          <div id="error-msg" style="display:none" class="error-box"></div>
+          <button class="btn-submit" onclick="submitEstimate()">🌵 Generate My Free Estimate →</button>
+          <button class="back-link" onclick="goBack()">← Back to questions</button>
+        </div>
+
+        <!-- STEP 3: Satellite Scan Loading -->
+        <div id="step-loading">
+          <div class="scan-wrap">
+            <img id="scan-img" src="" alt="" style="opacity:0" />
+            <div class="scan-ui">
+              <div class="scan-line"></div>
+              <div class="scan-corner scan-corner-tl"></div>
+              <div class="scan-corner scan-corner-tr"></div>
+              <div class="scan-corner scan-corner-bl"></div>
+              <div class="scan-corner scan-corner-br"></div>
+              <div class="scan-status-bar">
+                <div class="scan-dot"></div>
+                <div class="scan-status-text" id="scan-status-text">INITIALIZING SCAN...</div>
+                <div class="scan-coords" id="scan-coords">LAS VEGAS, NV</div>
+              </div>
+            </div>
+          </div>
+          <div class="loading-subtext">
+            AI is analyzing your <strong id="scan-city-name">{city.name}</strong> property…<br>
+            <small>Checking local rates, HOA factors &amp; desert conditions</small>
+          </div>
+        </div>
+
+        <!-- STEP 4: Result -->
+        <div id="step-result">
+          <div class="result-badge">✓ Your estimate is ready!</div>
+          <div class="result-name" id="res-name"></div>
+          <div class="result-summary" id="res-summary"></div>
+          <div class="result-total-label">ESTIMATED TOTAL RANGE</div>
+          <div class="result-total" id="res-total"></div>
+          <div class="result-timeline" id="res-timeline"></div>
+          <div class="result-items" id="res-items"></div>
+          <div class="result-notes" id="res-notes-wrap">
+            <div class="result-notes-title">📍 {city.name} Considerations</div>
+            <div id="res-notes"></div>
+          </div>
+          <a href="tel:7025288324" class="result-cta">📞 Call to Schedule Your Free Site Visit</a>
+          <div class="result-disclaimer" id="res-disclaimer"></div>
+        </div>
+
+      </div>
+    </div>
+
+    <!-- Related Services Sidebar -->
+    <div class="sidebar-section">
+      <div class="sidebar-title">Related Services in {city.name}</div>
+      <div class="sidebar-links">
+        {relatedServices.map(s => (
+          <a href={`/areas/${citySlug}/${s.slug}`} class="sidebar-link">
+            <span class="sidebar-icon">{s.emoji}</span>
+            {s.shortName} {city.name}
+          </a>
+        ))}
+        {allServices.filter(s => !service.relatedServices.includes(s.slug)).slice(0,3).map(s => (
+          <a href={`/areas/${citySlug}/${s.slug}`} class="sidebar-link">
+            <span class="sidebar-icon">{s.emoji}</span>
+            {s.shortName} {city.name}
+          </a>
+        ))}
+      </div>
+    </div>
+
+    <!-- Nearby Cities Sidebar -->
+    <div class="sidebar-section">
+      <div class="sidebar-title">{service.shortName} in Nearby Areas</div>
+      <div class="sidebar-links">
+        {nearbyCities.map(c => (
+          <a href={`/areas/${c.slug}/${serviceSlug}`} class="sidebar-link">
+            <span class="sidebar-icon">📍</span>
+            {service.shortName} {c.name}
+          </a>
+        ))}
+      </div>
+    </div>
+
+  </div>
+</div>
+
+<!-- Footer -->
+<footer style="background: var(--g900); color: rgba(255,255,255,0.7); text-align:center; padding: 24px; font-size: 0.8rem;">
+  <div style="margin-bottom:8px">
+    <a href="/areas" style="color:rgba(255,255,255,0.6);text-decoration:none;margin:0 8px">All Service Areas</a>
+    <a href="/" style="color:rgba(255,255,255,0.6);text-decoration:none;margin:0 8px">Home</a>
+    <a href="tel:7025288324" style="color:var(--gold2);text-decoration:none;font-weight:700;margin:0 8px">(702) 528-8324</a>
+    <a href="mailto:info@homepropeople.com" style="color:rgba(255,255,255,0.6);text-decoration:none;margin:0 8px">info@homepropeople.com</a>
+  </div>
+  © {new Date().getFullYear()} Las Vegas Landscaping — Licensed • Insured<br />
+  {service.name} in {city.name}, NV and surrounding areas
+</footer>
+
+<script is:inline define:vars={{ service, city, citySlug, serviceSlug }}>
+  // State
+  let serviceAnswers = {};
+
+  window.goToContact = function goToContact() {
+    // Collect answers
+    const questions = service.questions;
+    serviceAnswers = {};
+    let allAnswered = true;
+
+    questions.forEach((q, i) => {
+      const val = document.getElementById(`q${i}`)?.value;
+      if (!val) { allAnswered = false; }
+      serviceAnswers[q.q] = val || 'Not specified';
+    });
+
+    if (!allAnswered) {
+      alert('Please answer all questions to get an accurate estimate.');
+      return;
+    }
+
+    document.getElementById('step-questions').style.display = 'none';
+    document.getElementById('step-contact').style.display = 'block';
+    document.getElementById('estimate-panel').scrollIntoView({ behavior: 'smooth', block: 'start' });
+  }
+
+  window.goBack = function goBack() {
+    document.getElementById('step-contact').style.display = 'none';
+    document.getElementById('step-questions').style.display = 'block';
+  }
+
+  // Satellite scan status messages
+  const SCAN_MESSAGES = [
+    'INITIALIZING SCAN...',
+    'LOCATING PROPERTY...',
+    'ANALYZING AERIAL IMAGERY...',
+    'MEASURING COVERAGE AREA...',
+    'DETECTING SOIL CONDITIONS...',
+    'CHECKING HOA BOUNDARIES...',
+    'CROSS-REFERENCING LOCAL RATES...',
+    'CALCULATING WATER BUDGET...',
+    'QUERYING SNWA RECORDS...',
+    'RUNNING AI COST MODEL...',
+    'GENERATING YOUR ESTIMATE...'
+  ];
+  let scanInterval = null;
+
+  async function startSatelliteScan(address) {
+    const imgEl = document.getElementById('scan-img');
+    const statusEl = document.getElementById('scan-status-text');
+    const coordsEl = document.getElementById('scan-coords');
+
+    // Show address in coords bar
+    if (coordsEl) coordsEl.textContent = address.toUpperCase().substring(0, 24);
+    if (statusEl) statusEl.textContent = 'LOCATING PROPERTY...';
+
+    // Start cycling messages
+    let idx = 1;
+    scanInterval = setInterval(() => {
+      idx = (idx + 1) % SCAN_MESSAGES.length;
+      if (statusEl) statusEl.textContent = SCAN_MESSAGES[idx];
+    }, 1700);
+
+    try {
+      // Geocode the address using Nominatim (free, no API key)
+      const geoRes = await fetch(
+        `https://nominatim.openstreetmap.org/search?q=${encodeURIComponent(address)}&format=json&limit=1&countrycodes=us`,
+        { headers: { 'Accept-Language': 'en-US,en' } }
+      );
+      const geoData = await geoRes.json();
+
+      if (geoData && geoData.length > 0) {
+        const lat = parseFloat(geoData[0].lat);
+        const lon = parseFloat(geoData[0].lon);
+
+        // Bounding box ~200m around the point for a tight property view
+        const delta = 0.0012;
+        const bbox = `${lon - delta},${lat - delta},${lon + delta},${lat + delta}`;
+
+        // ESRI World Imagery — clean satellite photo, no map chrome, no API key needed
+        const esriUrl =
+          `https://server.arcgisonline.com/ArcGIS/rest/services/World_Imagery/MapServer/export` +
+          `?bbox=${bbox}&bboxSR=4326&imageSR=4326&size=640,360&format=jpg&f=image`;
+
+        if (imgEl) {
+          imgEl.onload = () => { imgEl.style.opacity = '1'; };
+          imgEl.src = esriUrl;
+        }
+      }
+    } catch (e) {
+      // Geocode failed — leave image hidden, scan overlay still plays
+    }
+  }
+
+  function stopSatelliteScan() {
+    if (scanInterval) { clearInterval(scanInterval); scanInterval = null; }
+  }
+
+  window.submitEstimate = async function submitEstimate() {
+    const firstName = document.getElementById('firstName').value.trim();
+    const phone = document.getElementById('phone').value.trim();
+    const streetAddress = document.getElementById('streetAddress')?.value.trim() || '';
+    const errorEl = document.getElementById('error-msg');
+
+    if (!firstName) { showError('Please enter your first name.'); return; }
+    if (!phone) { showError('Please enter your phone number.'); return; }
+
+    errorEl.style.display = 'none';
+    document.getElementById('step-contact').style.display = 'none';
+    document.getElementById('step-loading').style.display = 'block';
+
+    // Start the satellite scan animation
+    const scanAddress = streetAddress || city.name + ', Nevada';
+    startSatelliteScan(scanAddress); // async — geocodes + loads ESRI satellite image in background
+    document.getElementById('estimate-panel').scrollIntoView({ behavior: 'smooth', block: 'start' });
+
+    // Build service answers string for the prompt
+    const answersText = Object.entries(serviceAnswers)
+      .map(([q, a]) => `- ${q}: ${a}`)
+      .join('\n');
+
+    const fullAddress = streetAddress || `${city.name}, NV`;
+
+    const payload = {
+      services: [service.name],
+      property: {
+        address: fullAddress,
+        propertyType: 'Residential - Single Family',
+        lotSize: 'Not specified',
+        condition: 'Not specified',
+        timeline: serviceAnswers['What is your desired timeline for the installation?'] || 'Flexible',
+        hoa: serviceAnswers['Do you have HOA requirements?'] || serviceAnswers['HOA approval status?'] || 'Not sure'
+      },
+      contact: {
+        firstName,
+        lastName: document.getElementById('lastName').value.trim(),
+        phone,
+        email: document.getElementById('email').value.trim(),
+        contactMethod: 'Phone Call',
+        notes: document.getElementById('notes').value.trim()
+      },
+      serviceAnswers,
+      answersText,
+      cityName: city.name,
+      cityNote: city.localNote
+    };
+
+    try {
+      const res = await fetch('/api/submit', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(payload)
+      });
+
+      if (!res.ok) throw new Error('Server error');
+      const data = await res.json();
+      const est = data.estimate;
+
+      stopSatelliteScan();
+
+      // Render result
+      document.getElementById('step-loading').style.display = 'none';
+      document.getElementById('step-result').style.display = 'block';
+
+      document.getElementById('res-name').textContent = `${firstName}, here's your ${city.name} estimate!`;
+      document.getElementById('res-summary').textContent = est.summary || '';
+      document.getElementById('res-total').textContent = est.totalRange || 'Contact for pricing';
+      document.getElementById('res-timeline').textContent = est.projectTimeline ? `Project Duration: ${est.projectTimeline}` : '';
+
+      // Line items
+      const itemsEl = document.getElementById('res-items');
+      itemsEl.innerHTML = '';
+      (est.lineItems || []).forEach(item => {
+        itemsEl.innerHTML += `
+          <div class="result-item">
+            <div>
+              <div class="result-item-name">${item.service}</div>
+              <div class="result-item-desc">${item.description}</div>
+              <div style="font-size:0.75rem;color:#888;margin-top:2px">Timeline: ${item.timeline}</div>
+            </div>
+            <div class="result-item-price">${item.priceRange}</div>
+          </div>`;
+      });
+
+      // Notes
+      const notesEl = document.getElementById('res-notes');
+      notesEl.innerHTML = '';
+      (est.lasVegasNotes || []).forEach(note => {
+        notesEl.innerHTML += `<div class="result-note">${note}</div>`;
+      });
+
+      document.getElementById('res-disclaimer').textContent = est.disclaimer || '';
+      document.getElementById('estimate-panel').scrollIntoView({ behavior: 'smooth', block: 'start' });
+
+    } catch (e) {
+      stopSatelliteScan();
+      document.getElementById('step-loading').style.display = 'none';
+      document.getElementById('step-contact').style.display = 'block';
+      showError('Something went wrong. Please try again or call us at (702) 528-8324.');
+    }
+  }
+
+  function showError(msg) {
+    const el = document.getElementById('error-msg');
+    el.textContent = msg;
+    el.style.display = 'block';
+  }
+</script>
+
+</body>
+</html>

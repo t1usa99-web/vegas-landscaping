@@ -1,0 +1,789 @@
+---
+import { services } from '../../data/services.js';
+import { cities } from '../../data/cities.js';
+import { serviceTranslations } from '../../data/translations-es.js';
+const SITE = 'https://lasvegaslandscaping.homepropeople.com';
+---
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Paisajismo Las Vegas | Xeriscape, Patio y Jardín Desértico | Las Vegas Landscaping</title>
+  <meta name="description" content="Paisajismo profesional en Las Vegas. Xeriscape, césped artificial, patios, pérgolas, palmeras, riego por goteo y más. Con licencia y asegurados. Presupuesto gratuito con IA." />
+  <meta name="robots" content="index, follow" />
+  <link rel="canonical" href={`${SITE}/es/`} />
+  <link rel="alternate" hreflang="en" href={`${SITE}/`} />
+  <link rel="alternate" hreflang="es" href={`${SITE}/es/`} />
+  <link rel="alternate" hreflang="x-default" href={`${SITE}/`} />
+  <meta property="og:url" content={`${SITE}/es/`} />
+  <meta property="og:title" content="Paisajismo Las Vegas — Especialistas en Jardín Desértico" />
+  <meta property="og:description" content="Transforma tu espacio exterior con el equipo de paisajismo de confianza en Las Vegas. 1,000+ proyectos, calificación 4.9★, presupuesto instantáneo gratis." />
+  <meta property="og:type" content="website" />
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Inter:ital,wght@0,400;0,500;0,600;0,700;0,800;1,400&display=swap&font-display=swap" rel="stylesheet" />
+  <script type="application/ld+json">{JSON.stringify({
+    "@context": "https://schema.org",
+    "@type": "LocalBusiness",
+    "name": "Las Vegas Landscaping",
+    "description": "Paisajismo profesional, construcción y diseño de espacios exteriores para Las Vegas, Henderson, Summerlin y áreas circundantes.",
+    "telephone": "+17025288324",
+    "email": "info@homepropeople.com",
+    "address": { "@type": "PostalAddress", "addressLocality": "Las Vegas", "addressRegion": "NV", "postalCode": "89101" },
+    "geo": { "@type": "GeoCoordinates", "latitude": 36.1699, "longitude": -115.1398 },
+    "openingHours": ["Mo-Fr 07:00-18:00", "Sa 08:00-16:00"],
+    "priceRange": "$$",
+    "aggregateRating": { "@type": "AggregateRating", "ratingValue": "4.9", "reviewCount": "500" },
+    "areaServed": ["Las Vegas","Henderson","Summerlin","North Las Vegas","Green Valley","Boulder City","Enterprise","Paradise","Spring Valley"],
+    "inLanguage": "es"
+  })}</script>
+  <script type="application/ld+json">{JSON.stringify({
+    "@context": "https://schema.org",
+    "@type": "FAQPage",
+    "mainEntity": [
+      { "@type": "Question", "name": "¿Todavía se permite el pasto decorativo en Las Vegas?", "acceptedAnswer": { "@type": "Answer", "text": "No. La Ley AB356 de Nevada, firmada en 2021, prohíbe la instalación de pasto ornamental no funcional en el Valle de Las Vegas para 2027. Nos especializamos en hermosas alternativas compatibles con el agua, incluyendo césped artificial, xeriscape, grava decorativa y plantas nativas del desierto." } },
+      { "@type": "Question", "name": "¿Necesito aprobación del HOA antes de comenzar?", "acceptedAnswer": { "@type": "Answer", "text": "Depende de tu vecindario. La mayoría de las comunidades planeadas en Summerlin, Henderson y Green Valley requieren aprobación del HOA para cambios de paisajismo. Hemos trabajado con cientos de HOAs en Las Vegas y conocemos sus requisitos. Podemos ayudarte a preparar tu paquete de solicitud." } },
+      { "@type": "Question", "name": "¿Cuál es la mejor época del año para hacer paisajismo en Las Vegas?", "acceptedAnswer": { "@type": "Answer", "text": "La primavera (marzo–mayo) y el otoño (septiembre–noviembre) son ideales. Las plantas del desierto se establecen mejor con temperaturas moderadas. Sin embargo, trabajamos todo el año — la construcción de patios, el riego y muchos otros proyectos se pueden hacer de forma segura en verano." } },
+      { "@type": "Question", "name": "¿Cuánto tarda un proyecto típico de paisajismo?", "acceptedAnswer": { "@type": "Answer", "text": "Varía según el alcance. Un xeriscape básico o limpieza tarda 1–3 días. Un rediseño completo del jardín delantero normalmente toma 3–7 días. Un jardín trasero complejo con patio, pérgola, fogón e iluminación suele tardar 2–4 semanas." } },
+      { "@type": "Question", "name": "¿Tienen licencia y seguro en Nevada?", "acceptedAnswer": { "@type": "Answer", "text": "Sí. Estamos completamente licenciados por la Junta de Contratistas del Estado de Nevada, contamos con seguro de responsabilidad general y mantenemos cobertura de compensación laboral para todos los miembros del equipo." } }
+    ]
+  })}</script>
+  <style>
+    :root {
+      --g900:#0f2a1e;--g800:#1a4731;--g700:#2d6b4e;--g600:#3d8c62;--g500:#4da875;
+      --g100:#e8f4ee;--g50:#f4faf6;
+      --gold:#d4a017;--gold2:#f0c040;
+      --text:#1a1a1a;--muted:#6b7280;--border:#e2e8f0;
+      --shadow:0 4px 20px rgba(0,0,0,0.08);--radius:12px;
+    }
+    *,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+    body{font-family:'Inter',sans-serif;color:var(--text);background:#fff;line-height:1.6}
+    a{color:inherit;text-decoration:none}
+    .container{max-width:1100px;margin:0 auto;padding:0 24px}
+
+    /* Header */
+    .site-header{background:var(--g900);padding:0 24px;position:sticky;top:0;z-index:100;box-shadow:0 2px 12px rgba(0,0,0,0.3)}
+    .header-inner{max-width:1100px;margin:0 auto;display:flex;align-items:center;justify-content:space-between;height:64px;gap:16px}
+    .logo{display:flex;align-items:center;gap:10px}
+    .logo-name{font-weight:800;font-size:1rem;color:white;display:block}
+    .logo-tag{font-size:0.7rem;color:rgba(255,255,255,0.55)}
+    .header-nav{display:flex;align-items:center;gap:20px}
+    .header-nav a{color:rgba(255,255,255,0.75);font-size:0.875rem;font-weight:500;transition:color 0.15s}
+    .header-nav a:hover{color:white}
+    .header-cta{display:flex;align-items:center;gap:6px;background:var(--gold);color:var(--g900);padding:9px 18px;border-radius:7px;font-weight:700;font-size:0.875rem;white-space:nowrap;transition:background 0.15s}
+    .header-cta:hover{background:var(--gold2)}
+    .lang-switch{color:rgba(255,255,255,0.6);font-size:0.8rem;border:1px solid rgba(255,255,255,0.2);padding:4px 10px;border-radius:5px}
+    .lang-switch:hover{color:white;border-color:rgba(255,255,255,0.5)}
+    @media(max-width:700px){.header-nav{display:none}}
+
+    /* Hero */
+    .hero{background:linear-gradient(135deg,var(--g900) 0%,var(--g800) 60%,#1f5c3a 100%);color:white;padding:80px 24px 72px;text-align:center;position:relative;overflow:hidden}
+    .hero::before{content:'';position:absolute;inset:0;background:url("data:image/svg+xml,%3Csvg width='60' height='60' viewBox='0 0 60 60' xmlns='http://www.w3.org/2000/svg'%3E%3Cg fill='none' fill-rule='evenodd'%3E%3Cg fill='%23ffffff' fill-opacity='0.03'%3E%3Cpath d='M36 34v-4h-2v4h-4v2h4v4h2v-4h4v-2h-4zm0-30V0h-2v4h-4v2h4v4h2V6h4V4h-4zM6 34v-4H4v4H0v2h4v4h2v-4h4v-2H6zM6 4V0H4v4H0v2h4v4h2V6h4V4H6z'/%3E%3C/g%3E%3C/g%3E%3C/svg%3E")}
+    .hero-eyebrow{display:inline-flex;align-items:center;gap:8px;background:rgba(240,192,64,0.15);border:1px solid rgba(240,192,64,0.3);color:var(--gold2);font-size:0.8rem;font-weight:600;padding:6px 14px;border-radius:20px;margin-bottom:20px;position:relative}
+    .hero h1{font-size:clamp(1.9rem,4.5vw,3rem);font-weight:800;line-height:1.15;margin-bottom:18px;position:relative}
+    .hero h1 em{font-style:normal;color:var(--gold2)}
+    .hero>div>p{font-size:1.1rem;color:rgba(255,255,255,0.82);max-width:580px;margin:0 auto 32px;position:relative}
+    .hero-actions{display:flex;gap:14px;justify-content:center;flex-wrap:wrap;margin-bottom:24px;position:relative}
+    .btn-hero-primary{background:var(--gold);color:var(--g900);padding:14px 28px;border-radius:8px;font-weight:800;font-size:1rem;transition:background 0.15s}
+    .btn-hero-primary:hover{background:var(--gold2)}
+    .btn-hero-secondary{display:flex;align-items:center;gap:8px;background:rgba(255,255,255,0.1);border:1px solid rgba(255,255,255,0.25);color:white;padding:14px 22px;border-radius:8px;font-weight:600;font-size:0.9rem;backdrop-filter:blur(4px);transition:background 0.15s}
+    .btn-hero-secondary:hover{background:rgba(255,255,255,0.18)}
+    .hero-badges{display:flex;gap:10px;justify-content:center;flex-wrap:wrap;position:relative}
+    .hbadge{background:rgba(255,255,255,0.08);border:1px solid rgba(255,255,255,0.15);color:rgba(255,255,255,0.85);padding:6px 14px;border-radius:20px;font-size:0.8rem;font-weight:500}
+
+    /* Stats */
+    .stats-bar{background:white;border-bottom:1px solid var(--border);padding:20px 24px}
+    .stats-inner{display:flex;justify-content:center;align-items:center;gap:32px;flex-wrap:wrap}
+    .stat{text-align:center}
+    .stat-num{font-size:1.5rem;font-weight:800;color:var(--g800)}
+    .stat-lbl{font-size:0.75rem;color:var(--muted);margin-top:2px}
+    .stat-divider{width:1px;height:40px;background:var(--border)}
+    @media(max-width:500px){.stat-divider{display:none}}
+
+    /* Section headers */
+    .section-header{text-align:center;margin-bottom:48px}
+    .section-header.light{color:white}
+    .section-eyebrow{font-size:0.75rem;font-weight:700;text-transform:uppercase;letter-spacing:0.1em;color:var(--g600);margin-bottom:10px}
+    .section-header.light .section-eyebrow{color:var(--gold2)}
+    .section-header h2{font-size:clamp(1.5rem,3vw,2.1rem);font-weight:800;color:var(--g900);margin-bottom:12px;line-height:1.2}
+    .section-header.light h2{color:white}
+    .section-header p{color:var(--muted);font-size:1rem;max-width:560px;margin:0 auto}
+    .section-header.light p{color:rgba(255,255,255,0.75)}
+
+    /* Services */
+    .services-section{padding:72px 0;background:var(--g50)}
+    .service-columns{display:grid;grid-template-columns:repeat(3,1fr);gap:24px;margin-bottom:40px}
+    @media(max-width:800px){.service-columns{grid-template-columns:1fr}}
+    .service-col{background:white;border:1px solid var(--border);border-radius:var(--radius);padding:28px;display:flex;flex-direction:column;gap:14px}
+    .service-col.featured{border-color:var(--g600);box-shadow:0 0 0 2px var(--g600),var(--shadow);position:relative}
+    .service-col-badge{position:absolute;top:-12px;left:50%;transform:translateX(-50%);background:var(--g700);color:white;font-size:0.7rem;font-weight:700;padding:4px 14px;border-radius:20px;white-space:nowrap;text-transform:uppercase;letter-spacing:0.05em}
+    .service-col-icon{font-size:2rem}
+    .service-col h3{font-size:1.1rem;font-weight:700;color:var(--g900)}
+    .service-col-desc{font-size:0.875rem;color:var(--muted);line-height:1.6}
+    .service-list{list-style:none;display:flex;flex-direction:column;gap:6px;flex:1}
+    .service-list li{font-size:0.875rem;color:var(--text);display:flex;align-items:center;gap:8px}
+    .service-list li::before{content:'✓';color:var(--g600);font-weight:700;font-size:0.8rem;flex-shrink:0}
+    .service-col-cta{display:inline-flex;align-items:center;color:var(--g700);font-weight:700;font-size:0.875rem;margin-top:auto;padding-top:8px}
+    .service-col-cta:hover{color:var(--g900)}
+    .services-cta-bar{background:var(--g800);color:white;border-radius:var(--radius);padding:28px 32px;display:flex;align-items:center;justify-content:space-between;gap:20px;flex-wrap:wrap}
+    .services-cta-bar p{font-size:1rem;color:rgba(255,255,255,0.85)}
+    .btn-primary{background:var(--g700);color:white;padding:12px 24px;border-radius:8px;font-weight:700;font-size:0.9rem;transition:background 0.15s;display:inline-flex;align-items:center;gap:6px;white-space:nowrap}
+    .btn-primary:hover{background:var(--g800)}
+
+    /* Estimate Form */
+    .estimate-section{background:var(--g900);padding:80px 24px;color:white}
+    .estimate-inner{max-width:780px;margin:0 auto}
+    .estimate-inner .section-eyebrow{color:var(--gold2)}
+    .estimate-inner h2{color:white;font-size:clamp(1.5rem,3vw,2rem);font-weight:800;margin-bottom:8px}
+    .estimate-inner>p{color:rgba(255,255,255,0.75);margin-bottom:40px}
+    .form-card{background:white;border-radius:var(--radius);padding:36px;color:var(--text)}
+    .step-indicator{display:flex;align-items:center;gap:8px;margin-bottom:28px}
+    .step-dot{width:32px;height:32px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:0.8rem;font-weight:700;flex-shrink:0}
+    .step-dot.active{background:var(--g700);color:white}
+    .step-dot.done{background:var(--g100);color:var(--g700)}
+    .step-dot.inactive{background:var(--border);color:var(--muted)}
+    .step-line{flex:1;height:2px;background:var(--border)}
+    .step-line.done{background:var(--g600)}
+    .step-title{font-size:1.2rem;font-weight:700;color:var(--g900);margin-bottom:6px}
+    .step-subtitle{font-size:0.875rem;color:var(--muted);margin-bottom:24px}
+    .hidden{display:none}
+    .service-category-title{font-size:0.7rem;font-weight:700;text-transform:uppercase;letter-spacing:0.1em;color:var(--muted);margin:20px 0 10px}
+    .service-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(180px,1fr));gap:8px;margin-bottom:4px}
+    .service-item{display:flex;align-items:center;gap:10px;padding:12px 14px;border:1.5px solid var(--border);border-radius:8px;cursor:pointer;transition:all 0.15s;font-size:0.875rem}
+    .service-item:hover{border-color:var(--g500);background:var(--g50)}
+    .service-item input{display:none}
+    .service-item.checked{border-color:var(--g600);background:var(--g50)}
+    .service-icon{font-size:1.1rem;flex-shrink:0}
+    .service-name{font-weight:500;line-height:1.3}
+    .service-count{font-size:0.8rem;color:var(--g700);font-weight:600;margin-top:8px;min-height:20px}
+    .error-box{background:#fef2f2;border:1px solid #fca5a5;color:#dc2626;padding:10px 14px;border-radius:8px;font-size:0.875rem;margin-top:12px;display:none}
+    .error-box.show{display:block}
+    .btn-group{display:flex;gap:12px;justify-content:flex-end;margin-top:24px}
+    .btn-group.btn-end{justify-content:flex-end}
+    .btn-secondary{background:var(--g50);border:1.5px solid var(--border);color:var(--text);padding:11px 20px;border-radius:8px;font-weight:600;font-size:0.875rem;cursor:pointer;transition:all 0.15s}
+    .btn-secondary:hover{border-color:var(--g600);color:var(--g700)}
+    button.btn-primary{border:none;cursor:pointer;font-family:inherit}
+    .form-group{margin-bottom:18px}
+    .form-group label{display:block;font-size:0.8rem;font-weight:600;color:var(--muted);text-transform:uppercase;letter-spacing:0.06em;margin-bottom:6px}
+    .form-group input,.form-group select,.form-group textarea{width:100%;padding:11px 14px;border:1.5px solid var(--border);border-radius:8px;font-size:0.95rem;font-family:inherit;color:var(--text);transition:border-color 0.15s}
+    .form-group input:focus,.form-group select:focus,.form-group textarea:focus{outline:none;border-color:var(--g600)}
+    .form-row{display:grid;grid-template-columns:1fr 1fr;gap:16px}
+    @media(max-width:540px){.form-row{grid-template-columns:1fr}}
+    .radio-group{display:flex;flex-wrap:wrap;gap:8px}
+    .radio-item{display:flex;align-items:center;gap:8px;padding:9px 14px;border:1.5px solid var(--border);border-radius:8px;cursor:pointer;font-size:0.875rem;transition:all 0.15s}
+    .radio-item:hover{border-color:var(--g500)}
+    .radio-item.selected{border-color:var(--g600);background:var(--g50);color:var(--g800);font-weight:600}
+    .radio-item input{display:none}
+    .required{color:#dc2626}
+    .optional{color:var(--muted);font-weight:400;font-size:0.8rem;text-transform:none;letter-spacing:0}
+    .privacy-note{font-size:0.8rem;color:var(--muted);margin-bottom:12px}
+    .generating-state{text-align:center;padding:40px 20px;color:var(--g800)}
+    .spinner{width:40px;height:40px;border:3px solid var(--g100);border-top-color:var(--g700);border-radius:50%;animation:spin 0.8s linear infinite;margin:0 auto 16px}
+    @keyframes spin{to{transform:rotate(360deg)}}
+    .estimate-result{padding:4px 0}
+    .estimate-total-box{background:var(--g50);border:2px solid var(--g600);border-radius:10px;padding:20px;text-align:center;margin-bottom:20px}
+    .estimate-total-label{font-size:0.75rem;font-weight:700;text-transform:uppercase;letter-spacing:0.08em;color:var(--g600);margin-bottom:4px}
+    .estimate-total-amount{font-size:2rem;font-weight:800;color:var(--g900)}
+    .estimate-timeline{font-size:0.85rem;color:var(--muted);margin-top:4px}
+    .estimate-summary{font-size:0.95rem;color:var(--text);line-height:1.7;margin-bottom:20px;padding:16px;background:var(--g50);border-radius:8px}
+    .line-items{border:1px solid var(--border);border-radius:8px;overflow:hidden;margin-bottom:20px}
+    .line-item{display:grid;grid-template-columns:1fr auto;gap:16px;padding:14px 16px;border-bottom:1px solid var(--border);font-size:0.875rem}
+    .line-item:last-child{border-bottom:none}
+    .line-item:nth-child(even){background:var(--g50)}
+    .line-item-name{font-weight:600;color:var(--g900)}
+    .line-item-desc{font-size:0.8rem;color:var(--muted);margin-top:2px}
+    .line-item-price{font-weight:700;color:var(--g800);white-space:nowrap;text-align:right}
+    .line-item-time{font-size:0.75rem;color:var(--muted);text-align:right}
+    .lv-notes{background:#fffbeb;border:1px solid #fde68a;border-radius:8px;padding:16px;margin-bottom:16px}
+    .lv-notes-title{font-size:0.75rem;font-weight:700;text-transform:uppercase;letter-spacing:0.06em;color:#92400e;margin-bottom:8px}
+    .lv-notes ul{list-style:none;display:flex;flex-direction:column;gap:6px}
+    .lv-notes li{font-size:0.85rem;color:#78350f;display:flex;gap:8px}
+    .lv-notes li::before{content:'💡';flex-shrink:0}
+    .estimate-disclaimer{font-size:0.75rem;color:var(--muted);line-height:1.5;padding-top:12px;border-top:1px solid var(--border)}
+    .estimate-cta-bar{display:flex;gap:12px;flex-wrap:wrap;margin-top:20px}
+    .btn-call-cta{display:flex;align-items:center;gap:8px;background:var(--g700);color:white;padding:13px 20px;border-radius:8px;font-weight:700;font-size:0.9rem;transition:background 0.15s}
+    .btn-call-cta:hover{background:var(--g800)}
+    .btn-restart{background:var(--g50);border:1.5px solid var(--border);color:var(--text);padding:12px 20px;border-radius:8px;font-weight:600;font-size:0.875rem;cursor:pointer;font-family:inherit;transition:all 0.15s}
+    .btn-restart:hover{border-color:var(--g600)}
+
+    /* Testimonials */
+    .testimonials-section{background:var(--g800);padding:72px 24px;color:white}
+    .testimonials-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(280px,1fr));gap:20px;margin-top:40px}
+    .testimonial-card{background:rgba(255,255,255,0.07);border:1px solid rgba(255,255,255,0.1);border-radius:var(--radius);padding:24px}
+    .stars{color:var(--gold2);font-size:0.9rem;margin-bottom:10px}
+    .testimonial-text{font-size:0.9rem;color:rgba(255,255,255,0.85);line-height:1.7;margin-bottom:14px;font-style:italic}
+    .testimonial-author{font-size:0.8rem;font-weight:600;color:rgba(255,255,255,0.6)}
+
+    /* Areas */
+    .areas-section{padding:72px 24px;background:white}
+    .city-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(160px,1fr));gap:10px;margin-top:32px}
+    .city-link{background:var(--g50);border:1px solid var(--g100);border-radius:8px;padding:12px 16px;font-size:0.875rem;font-weight:600;color:var(--g800);text-align:center;transition:all 0.15s}
+    .city-link:hover{background:var(--g100);border-color:var(--g600);color:var(--g900)}
+
+    /* FAQ */
+    .faq-section{background:var(--g50);padding:72px 24px}
+    .faq-wrap{max-width:720px;margin:0 auto}
+    .faq-item{background:white;border:1px solid var(--border);border-radius:10px;margin-bottom:10px;overflow:hidden}
+    .faq-q{width:100%;display:flex;justify-content:space-between;align-items:center;padding:18px 22px;background:none;border:none;cursor:pointer;font-size:0.95rem;font-weight:600;color:var(--g900);text-align:left;font-family:inherit;transition:background 0.15s}
+    .faq-q:hover{background:var(--g50)}
+    .faq-icon{font-size:1.25rem;font-weight:300;color:var(--g600);flex-shrink:0;transition:transform 0.2s}
+    .faq-item.open .faq-q{background:var(--g50)}
+    .faq-item.open .faq-icon{transform:rotate(45deg)}
+    .faq-a{display:none;padding:0 22px 18px;color:var(--muted);font-size:0.9rem;line-height:1.7}
+    .faq-item.open .faq-a{display:block}
+
+    /* Footer */
+    footer{background:var(--g900);color:rgba(255,255,255,0.65);padding:32px 24px;text-align:center;font-size:0.8rem}
+    footer a{color:var(--gold2);font-weight:600;margin:0 8px}
+    .footer-links{margin-bottom:10px}
+  </style>
+</head>
+<body>
+
+<header class="site-header" id="top">
+  <div class="header-inner">
+    <a href="/es/" class="logo">
+      <svg width="36" height="36" viewBox="0 0 38 38" fill="none" aria-hidden="true">
+        <circle cx="19" cy="19" r="19" fill="#2d6b4e"/>
+        <path d="M19 8C13 8 8 13 8 19s5 11 11 11c1.8 0 3.5-.5 5-1.3L19 24l-3-6 6-3 3 6-3 3.7C25.5 23 27 21 27 19c0-6-4-10.5-8-11z" fill="white"/>
+        <path d="M19 8c.7 3 1.8 10-3 14.5" stroke="#d4a017" stroke-width="2" stroke-linecap="round" fill="none"/>
+      </svg>
+      <div>
+        <span class="logo-name">Las Vegas Landscaping</span>
+        <span class="logo-tag">Con Licencia • Asegurado</span>
+      </div>
+    </a>
+    <nav class="header-nav">
+      <a href="#servicios">Servicios</a>
+      <a href="/es/areas">Áreas de Servicio</a>
+      <a href="/es/calculadora-rebate">💧 Calculadora</a>
+      <a href="#faq">Preguntas</a>
+      <a href="/" class="lang-switch">🇺🇸 English</a>
+    </nav>
+    <a href="tel:7025288324" class="header-cta">📞 (702) 528-8324</a>
+  </div>
+</header>
+
+<!-- Hero -->
+<section class="hero">
+  <div class="container">
+    <div class="hero-eyebrow">★★★★★ Calificación 4.9 &bull; 500+ Reseñas &bull; El Equipo #1 en Las Vegas</div>
+    <h1>Transforma Tu Jardín de Las Vegas<br /><em>en un Paraíso Desértico</em></h1>
+    <p>Paisajismo profesional, construcción de patios y diseño de espacios exteriores — creados para el desierto. Servicio en Las Vegas, Henderson, Summerlin y áreas cercanas.</p>
+    <div class="hero-actions">
+      <a href="#presupuesto" class="btn-hero-primary">Obtener Mi Presupuesto Gratis →</a>
+      <a href="tel:7025288324" class="btn-hero-secondary">📞 (702) 528-8324</a>
+    </div>
+    <div class="hero-badges">
+      <span class="hbadge">✅ Con Licencia y Fianza</span>
+      <span class="hbadge">💧 Cumple con AB356 de Nevada</span>
+      <span class="hbadge">⚡ Presupuestos Gratis el Mismo Día</span>
+    </div>
+  </div>
+</section>
+
+<!-- Stats -->
+<div class="stats-bar">
+  <div class="stats-inner">
+    <div class="stat"><div class="stat-num">1,000+</div><div class="stat-lbl">Proyectos Completados</div></div>
+    <div class="stat-divider"></div>
+    <div class="stat"><div class="stat-num">4.9★</div><div class="stat-lbl">Calificación Google</div></div>
+    <div class="stat-divider"></div>
+    <div class="stat"><div class="stat-num">20+</div><div class="stat-lbl">Años de Experiencia</div></div>
+    <div class="stat-divider"></div>
+    <div class="stat"><div class="stat-num">100%</div><div class="stat-lbl">Satisfacción Garantizada</div></div>
+  </div>
+</div>
+
+<!-- Services -->
+<section class="services-section" id="servicios">
+  <div class="container">
+    <div class="section-header">
+      <div class="section-eyebrow">Lo Que Hacemos</div>
+      <h2>Paisajismo Completo para Hogares y Negocios en Las Vegas</h2>
+      <p>Desde xeriscape eficiente en agua hasta construcción de patios y espacios exteriores — manejamos todo desde el diseño hasta la instalación.</p>
+    </div>
+    <div class="service-columns">
+      <div class="service-col">
+        <div class="service-col-icon">🌵</div>
+        <h3>Jardín Desértico y Xeriscape</h3>
+        <p class="service-col-desc">Paisajismo eficiente en agua diseñado para el clima desértico de Nevada y el cumplimiento de AB356.</p>
+        <ul class="service-list">
+          <li>Diseño e Instalación de Xeriscape</li>
+          <li>Grava Decorativa y Granito Descompuesto</li>
+          <li>Plantas Nativas del Desierto</li>
+          <li>Instalación de Césped Artificial</li>
+          <li>Instalación de Pasto Natural (Sod)</li>
+          <li>Arbustos y Plantas Ornamentales</li>
+          <li>Fertilización y Control de Maleza</li>
+        </ul>
+        <a href="#presupuesto" class="service-col-cta">Obtener Presupuesto de Xeriscape →</a>
+      </div>
+      <div class="service-col featured">
+        <div class="service-col-badge">Más Popular</div>
+        <div class="service-col-icon">🏡</div>
+        <h3>Construcción y Pavimentación</h3>
+        <p class="service-col-desc">Trabajos de piedra, adoquines y elementos estructurales exteriores construidos para el calor del desierto.</p>
+        <ul class="service-list">
+          <li>Instalación de Patio (Adoquines, Piedra, Concreto)</li>
+          <li>Construcción de Pérgola y Gazebo</li>
+          <li>Muros de Contención</li>
+          <li>Andadores de Concreto</li>
+          <li>Concreto Estampado y Decorativo</li>
+          <li>Piedras y Rocas Decorativas</li>
+          <li>Cocina Exterior</li>
+          <li>Fogón y Chimenea Exterior</li>
+        </ul>
+        <a href="#presupuesto" class="service-col-cta">Obtener Presupuesto de Construcción →</a>
+      </div>
+      <div class="service-col">
+        <div class="service-col-icon">✨</div>
+        <h3>Espacios Exteriores y Mantenimiento</h3>
+        <p class="service-col-desc">Ambientes exteriores completos — riego, iluminación, árboles y cuidado continuo.</p>
+        <ul class="service-list">
+          <li>Iluminación de Paisajismo</li>
+          <li>Diseño e Instalación de Riego por Goteo</li>
+          <li>Instalación y Reparación de Aspersores</li>
+          <li>Instalación y Poda de Palmeras</li>
+          <li>Poda y Remoción de Árboles</li>
+          <li>Paisajismo en Área de Alberca</li>
+          <li>Limpieza de Jardín y Escombros</li>
+          <li>Programas de Mantenimiento Regular</li>
+        </ul>
+        <a href="#presupuesto" class="service-col-cta">Obtener Presupuesto Personalizado →</a>
+      </div>
+    </div>
+    <div class="services-cta-bar">
+      <p>¿No sabes qué servicios necesitas? Nuestra IA te ayuda a determinarlo.</p>
+      <a href="#presupuesto" class="btn-primary">Iniciar Mi Presupuesto Gratis →</a>
+    </div>
+  </div>
+</section>
+
+<!-- Estimate Form -->
+<section class="estimate-section" id="presupuesto">
+  <div class="estimate-inner">
+    <div class="section-eyebrow">Presupuesto Instantáneo con IA</div>
+    <h2>Obtén Tu Presupuesto Gratis en Segundos</h2>
+    <p>Nuestra IA genera un presupuesto detallado basado en tu proyecto específico en Las Vegas — completamente gratis, sin compromiso.</p>
+
+    <div class="form-card">
+      <!-- Step indicator -->
+      <div class="step-indicator" id="step-indicator">
+        <div class="step-dot active" id="dot-1">1</div>
+        <div class="step-line" id="line-1"></div>
+        <div class="step-dot inactive" id="dot-2">2</div>
+        <div class="step-line" id="line-2"></div>
+        <div class="step-dot inactive" id="dot-3">3</div>
+      </div>
+
+      <!-- Step 1: Services -->
+      <div class="form-step" id="step-1">
+        <h2 class="step-title">¿Qué servicios necesitas?</h2>
+        <p class="step-subtitle">Selecciona todos los que apliquen — podemos manejar múltiples servicios en un solo proyecto.</p>
+
+        <div class="service-category-title">Jardín Desértico y Agua</div>
+        <div class="service-grid">
+          <label class="service-item"><input type="checkbox" name="services" value="Xeriscape Design & Installation" /><span class="service-icon">🌵</span><span class="service-name">Xeriscape</span></label>
+          <label class="service-item"><input type="checkbox" name="services" value="Artificial Turf Installation" /><span class="service-icon">🟩</span><span class="service-name">Césped Artificial</span></label>
+          <label class="service-item"><input type="checkbox" name="services" value="Drip Irrigation System" /><span class="service-icon">💧</span><span class="service-name">Riego por Goteo</span></label>
+          <label class="service-item"><input type="checkbox" name="services" value="Sod Installation (Natural Grass)" /><span class="service-icon">🌿</span><span class="service-name">Pasto Natural</span></label>
+        </div>
+
+        <div class="service-category-title">Construcción y Estructuras</div>
+        <div class="service-grid">
+          <label class="service-item"><input type="checkbox" name="services" value="Patio Installation" /><span class="service-icon">🏡</span><span class="service-name">Instalación de Patio</span></label>
+          <label class="service-item"><input type="checkbox" name="services" value="Gazebo & Pergola Construction" /><span class="service-icon">🏛️</span><span class="service-name">Gazebo y Pérgola</span></label>
+          <label class="service-item"><input type="checkbox" name="services" value="Retaining Wall" /><span class="service-icon">🧱</span><span class="service-name">Muro de Contención</span></label>
+          <label class="service-item"><input type="checkbox" name="services" value="Fire Pit or Fireplace" /><span class="service-icon">🔥</span><span class="service-name">Fogón / Chimenea</span></label>
+        </div>
+
+        <div class="service-category-title">Árboles y Plantas</div>
+        <div class="service-grid">
+          <label class="service-item"><input type="checkbox" name="services" value="Palm Tree Installation & Trimming" /><span class="service-icon">🌴</span><span class="service-name">Palmeras</span></label>
+          <label class="service-item"><input type="checkbox" name="services" value="Tree Trimming & Removal" /><span class="service-icon">🌳</span><span class="service-name">Poda de Árboles</span></label>
+          <label class="service-item"><input type="checkbox" name="services" value="Landscape Lighting" /><span class="service-icon">💡</span><span class="service-name">Iluminación</span></label>
+          <label class="service-item"><input type="checkbox" name="services" value="Native Plant Installation" /><span class="service-icon">🌺</span><span class="service-name">Plantas Nativas</span></label>
+        </div>
+
+        <div class="service-category-title">Mantenimiento y Limpieza</div>
+        <div class="service-grid">
+          <label class="service-item"><input type="checkbox" name="services" value="Yard Cleanup & Debris Removal" /><span class="service-icon">🧹</span><span class="service-name">Limpieza de Jardín</span></label>
+          <label class="service-item"><input type="checkbox" name="services" value="Regular Lawn Maintenance Program" /><span class="service-icon">📅</span><span class="service-name">Mantenimiento Regular</span></label>
+          <label class="service-item"><input type="checkbox" name="services" value="Fertilization & Weed Control" /><span class="service-icon">🌿</span><span class="service-name">Fertilización</span></label>
+          <label class="service-item"><input type="checkbox" name="services" value="Seasonal Cleanup" /><span class="service-icon">🍂</span><span class="service-name">Limpieza Estacional</span></label>
+        </div>
+
+        <div id="service-count" class="service-count"></div>
+        <div id="step1-error" class="error-box">Por favor selecciona al menos un servicio para continuar.</div>
+        <div class="btn-group btn-end">
+          <button class="btn-primary" id="btn-step1-next" type="button">Continuar a Detalles de Propiedad →</button>
+        </div>
+      </div>
+
+      <!-- Step 2: Property -->
+      <div class="form-step hidden" id="step-2">
+        <h2 class="step-title">Cuéntanos sobre tu propiedad</h2>
+        <p class="step-subtitle">Esto nos ayuda a adaptar el precio a tu ubicación en Las Vegas, tamaño del terreno y alcance del proyecto.</p>
+        <div class="form-group">
+          <label for="address">Dirección de la Propiedad <span class="required">*</span></label>
+          <input type="text" id="address" name="address" autocomplete="street-address" placeholder="123 Desert Vista Dr, Las Vegas, NV 89101" />
+        </div>
+        <div class="form-group">
+          <label>Tipo de Propiedad</label>
+          <div class="radio-group" id="propertyType-group">
+            <label class="radio-item selected"><input type="radio" name="propertyType" value="Residential - Single Family" checked /> Casa Unifamiliar</label>
+            <label class="radio-item"><input type="radio" name="propertyType" value="Residential - Townhome/Condo" /> Townhome / Condo</label>
+            <label class="radio-item"><input type="radio" name="propertyType" value="Commercial" /> Comercial</label>
+            <label class="radio-item"><input type="radio" name="propertyType" value="HOA / Common Area" /> HOA / Área Común</label>
+          </div>
+        </div>
+        <div class="form-row">
+          <div class="form-group">
+            <label for="lotSize">Área del Terreno / Proyecto</label>
+            <select id="lotSize" name="lotSize">
+              <option value="Small (under 5,000 sq ft)">Pequeño — menos de 465 m²</option>
+              <option value="Medium (5,000–10,000 sq ft)" selected>Mediano — 465–930 m²</option>
+              <option value="Large (10,000–20,000 sq ft)">Grande — 930–1,860 m²</option>
+              <option value="Estate (20,000+ sq ft)">Estate — más de 1,860 m²</option>
+              <option value="Not sure">No estoy seguro/a</option>
+            </select>
+          </div>
+          <div class="form-group">
+            <label for="timeline">Tiempo Deseado</label>
+            <select id="timeline" name="timeline">
+              <option value="ASAP (within 2–4 weeks)">Lo antes posible — 2–4 semanas</option>
+              <option value="1–3 months" selected>1–3 meses</option>
+              <option value="3–6 months">3–6 meses</option>
+              <option value="Just exploring options">Solo explorando opciones</option>
+            </select>
+          </div>
+        </div>
+        <div class="form-group">
+          <label for="condition">Estado Actual del Jardín</label>
+          <select id="condition" name="condition">
+            <option value="Bare dirt / New construction">Tierra vacía / Construcción nueva</option>
+            <option value="Overgrown or neglected">Muy descuidado o lleno de maleza</option>
+            <option value="Partially landscaped — needs refresh" selected>Parcialmente paisajado — necesita renovación</option>
+            <option value="Well maintained — minor updates only">Bien mantenido — solo actualizaciones menores</option>
+            <option value="Desert rock / Minimal vegetation">Roca del desierto / Poca vegetación</option>
+          </select>
+        </div>
+        <div class="form-group">
+          <label>¿Tienes Restricciones de HOA?</label>
+          <div class="radio-group" id="hoa-group">
+            <label class="radio-item"><input type="radio" name="hoa" value="Yes — I have HOA guidelines" /> Sí, tengo reglas del HOA</label>
+            <label class="radio-item"><input type="radio" name="hoa" value="No HOA" /> Sin HOA</label>
+            <label class="radio-item selected"><input type="radio" name="hoa" value="Not sure" checked /> No estoy seguro/a</label>
+          </div>
+        </div>
+        <div id="step2-error" class="error-box">Por favor ingresa la dirección de tu propiedad.</div>
+        <div class="btn-group">
+          <button class="btn-secondary" id="btn-step2-back" type="button">← Regresar</button>
+          <button class="btn-primary" id="btn-step2-next" type="button">Continuar a Contacto →</button>
+        </div>
+      </div>
+
+      <!-- Step 3: Contact -->
+      <div class="form-step hidden" id="step-3">
+        <h2 class="step-title">¿Cómo podemos contactarte?</h2>
+        <p class="step-subtitle">Te daremos seguimiento dentro de 24 horas con tu presupuesto y una oferta de consulta gratuita en sitio.</p>
+        <div class="form-row">
+          <div class="form-group">
+            <label for="firstName">Nombre <span class="required">*</span></label>
+            <input type="text" id="firstName" name="firstName" autocomplete="given-name" placeholder="María" />
+          </div>
+          <div class="form-group">
+            <label for="lastName">Apellido</label>
+            <input type="text" id="lastName" name="lastName" autocomplete="family-name" placeholder="García" />
+          </div>
+        </div>
+        <div class="form-row">
+          <div class="form-group">
+            <label for="phone">Teléfono</label>
+            <input type="tel" id="phone" name="phone" autocomplete="tel" placeholder="(702) 528-8324" />
+          </div>
+          <div class="form-group">
+            <label for="email">Correo Electrónico</label>
+            <input type="email" id="email" name="email" autocomplete="email" placeholder="maria@ejemplo.com" />
+          </div>
+        </div>
+        <div class="form-group">
+          <label>Método de Contacto Preferido</label>
+          <div class="radio-group" id="contactMethod-group">
+            <label class="radio-item"><input type="radio" name="contactMethod" value="Phone call" /> Llamada Telefónica</label>
+            <label class="radio-item selected"><input type="radio" name="contactMethod" value="Text message" checked /> Mensaje de Texto</label>
+            <label class="radio-item"><input type="radio" name="contactMethod" value="Email" /> Correo Electrónico</label>
+          </div>
+        </div>
+        <div class="form-group">
+          <label for="notes">¿Algo más que debamos saber? <span class="optional">(Opcional)</span></label>
+          <textarea id="notes" name="notes" rows="3" placeholder="Ideas de diseño, presupuesto, detalles del HOA, notas de acceso..."></textarea>
+        </div>
+        <div class="privacy-note">🔒 Tu información es privada y solo se usará para dar seguimiento a tu proyecto.</div>
+        <div id="step3-error" class="error-box">Por favor ingresa tu nombre para continuar.</div>
+        <div class="btn-group">
+          <button class="btn-secondary" id="btn-step3-back" type="button">← Regresar</button>
+          <button class="btn-primary" id="btn-submit" type="button">✨ Generar Mi Presupuesto con IA</button>
+        </div>
+      </div>
+
+      <!-- Generating -->
+      <div class="form-step hidden generating-state" id="step-generating">
+        <div class="spinner"></div>
+        <p style="font-weight:600;font-size:1rem;">Generando tu presupuesto personalizado…</p>
+        <p style="color:var(--muted);font-size:0.875rem;margin-top:6px;">Nuestra IA está analizando tu proyecto de Las Vegas. Esto tarda unos segundos.</p>
+      </div>
+
+      <!-- Result -->
+      <div class="form-step hidden estimate-result" id="step-result">
+        <div class="estimate-total-box">
+          <div class="estimate-total-label">Rango Total Estimado</div>
+          <div class="estimate-total-amount" id="result-total"></div>
+          <div class="estimate-timeline" id="result-timeline"></div>
+        </div>
+        <div class="estimate-summary" id="result-summary"></div>
+        <div class="line-items" id="result-line-items"></div>
+        <div class="lv-notes" id="result-lv-notes"></div>
+        <div id="result-next-steps" style="font-size:0.875rem;color:var(--text);margin-bottom:12px;"></div>
+        <div class="estimate-disclaimer" id="result-disclaimer"></div>
+        <div class="estimate-cta-bar">
+          <a href="tel:7025288324" class="btn-call-cta">📞 Llamar para Consulta Gratuita</a>
+          <button class="btn-restart" id="btn-restart">Empezar de Nuevo</button>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- Testimonials -->
+<section class="testimonials-section">
+  <div class="container">
+    <div class="section-header light">
+      <div class="section-eyebrow">Lo Que Dicen Nuestros Clientes</div>
+      <h2>Reseñas Reales de Vecinos de Las Vegas</h2>
+    </div>
+    <div class="testimonials-grid">
+      <div class="testimonial-card">
+        <div class="stars">★★★★★</div>
+        <p class="testimonial-text">"Removieron todo nuestro pasto delantero e instalaron un xeriscape hermoso. Nos ayudaron con la rebaja del SNWA y ahorramos más de $8,000 entre el trabajo y el reembolso. ¡Increíble servicio!"</p>
+        <div class="testimonial-author">— Rosa M., Henderson, NV</div>
+      </div>
+      <div class="testimonial-card">
+        <div class="stars">★★★★★</div>
+        <p class="testimonial-text">"Construyeron nuestra pérgola y patio de adoquines en tiempo récord. El diseño en 3D que nos mostraron antes fue exactamente como quedó. El equipo fue muy profesional y limpio."</p>
+        <div class="testimonial-author">— Jorge y Carmen L., Summerlin, NV</div>
+      </div>
+      <div class="testimonial-card">
+        <div class="stars">★★★★★</div>
+        <p class="testimonial-text">"Instalaron césped artificial en el jardín trasero para nuestros perros. La calidad es excelente — se siente como pasto real y drena perfectamente. Muy contentos con el resultado."</p>
+        <div class="testimonial-author">— Miguel A., North Las Vegas, NV</div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- Areas -->
+<section class="areas-section">
+  <div class="container">
+    <div class="section-header">
+      <div class="section-eyebrow">Dónde Trabajamos</div>
+      <h2>Servicio en Todo el Valle de Las Vegas</h2>
+      <p>Servimos a todas las comunidades del Valle de Las Vegas. Selecciona tu ciudad para ver información específica de tu área.</p>
+    </div>
+    <div class="city-grid">
+      {cities.map(city => (
+        <a href={`/es/areas/${city.slug}`} class="city-link">🌵 {city.name}</a>
+      ))}
+    </div>
+  </div>
+</section>
+
+<!-- FAQ -->
+<section class="faq-section" id="faq">
+  <div class="faq-wrap">
+    <div class="section-header" style="text-align:center;margin-bottom:32px">
+      <div class="section-eyebrow">Preguntas Frecuentes</div>
+      <h2 class="section-header h2">Resolvemos Tus Dudas</h2>
+    </div>
+    <div class="faq-item">
+      <button class="faq-q" aria-expanded="false">¿Todavía se permite el pasto decorativo en Las Vegas?<span class="faq-icon">+</span></button>
+      <div class="faq-a"><p>No. La Ley AB356 de Nevada, firmada en 2021, prohíbe la instalación de pasto ornamental no funcional en el Valle de Las Vegas para 2027. El pasto existente debe removerse. Nos especializamos en hermosas alternativas compatibles con el agua — césped artificial, xeriscape, grava decorativa y plantas nativas del desierto.</p></div>
+    </div>
+    <div class="faq-item">
+      <button class="faq-q" aria-expanded="false">¿Necesito aprobación del HOA antes de comenzar?<span class="faq-icon">+</span></button>
+      <div class="faq-a"><p>Depende de tu vecindario. La mayoría de las comunidades planeadas en Summerlin, Henderson y Green Valley requieren aprobación del HOA para cambios de paisajismo. Hemos trabajado con cientos de HOAs en Las Vegas y conocemos sus requisitos. Podemos ayudarte a preparar tu paquete de solicitud sin costo adicional.</p></div>
+    </div>
+    <div class="faq-item">
+      <button class="faq-q" aria-expanded="false">¿Cuál es la mejor época para hacer paisajismo en Las Vegas?<span class="faq-icon">+</span></button>
+      <div class="faq-a"><p>La primavera (marzo–mayo) y el otoño (septiembre–noviembre) son ideales. Las plantas del desierto se establecen mejor con temperaturas moderadas y los materiales de construcción son más fáciles de trabajar. Sin embargo, trabajamos todo el año — la construcción de patios, el riego y muchos otros proyectos se pueden hacer de forma segura en verano.</p></div>
+    </div>
+    <div class="faq-item">
+      <button class="faq-q" aria-expanded="false">¿Cuánto tarda un proyecto típico de paisajismo?<span class="faq-icon">+</span></button>
+      <div class="faq-a"><p>Varía según el alcance. Un xeriscape básico o limpieza tarda 1–3 días. Un rediseño completo del jardín delantero normalmente toma 3–7 días. Un jardín trasero complejo con patio, pérgola, fogón e iluminación suele tardar 2–4 semanas. Te damos un calendario detallado durante la consulta gratuita.</p></div>
+    </div>
+    <div class="faq-item">
+      <button class="faq-q" aria-expanded="false">¿Tienen licencia y seguro en Nevada?<span class="faq-icon">+</span></button>
+      <div class="faq-a"><p>Sí. Estamos completamente licenciados por la Junta de Contratistas del Estado de Nevada, contamos con seguro de responsabilidad general y mantenemos cobertura de compensación laboral para todos los miembros del equipo. Con gusto te proporcionamos prueba de seguro y licencia antes de iniciar cualquier trabajo.</p></div>
+    </div>
+    <div class="faq-item">
+      <button class="faq-q" aria-expanded="false">¿Ofrecen garantía en su trabajo?<span class="faq-icon">+</span></button>
+      <div class="faq-a"><p>Sí. Respaldamos todas nuestras instalaciones con garantía de mano de obra. Las plantas y materiales naturales tienen garantía de establecimiento de 90 días. El trabajo de construcción (adoquines, concreto, muros) tiene garantía estructural de 1 año. Las garantías del fabricante en césped artificial y sistemas de riego te son transferidas directamente.</p></div>
+    </div>
+  </div>
+</section>
+
+<footer>
+  <div class="footer-links">
+    <a href="/es/">Inicio</a>
+    <a href="/es/areas">Áreas de Servicio</a>
+    <a href="/es/calculadora-rebate">Calculadora de Rebaja</a>
+    <a href="tel:7025288324">(702) 528-8324</a>
+    <a href="/">🇺🇸 English</a>
+  </div>
+  © {new Date().getFullYear()} Las Vegas Landscaping — Con Licencia • Asegurado
+</footer>
+
+<script is:inline>
+// Radio selection highlight
+document.querySelectorAll('.radio-group').forEach(group => {
+  group.querySelectorAll('.radio-item').forEach(item => {
+    item.addEventListener('click', () => {
+      group.querySelectorAll('.radio-item').forEach(i => i.classList.remove('selected'));
+      item.classList.add('selected');
+    });
+  });
+});
+
+// Service checkboxes
+document.querySelectorAll('.service-item').forEach(item => {
+  item.addEventListener('click', () => {
+    item.classList.toggle('checked');
+    const checked = document.querySelectorAll('.service-item.checked').length;
+    const el = document.getElementById('service-count');
+    el.textContent = checked > 0 ? `${checked} servicio${checked > 1 ? 's' : ''} seleccionado${checked > 1 ? 's' : ''}` : '';
+  });
+});
+
+// Step navigation helpers
+function showStep(n) {
+  document.querySelectorAll('.form-step').forEach(s => s.classList.add('hidden'));
+  document.getElementById('step-' + n).classList.remove('hidden');
+  ['1','2','3'].forEach(i => {
+    const dot = document.getElementById('dot-' + i);
+    dot.className = 'step-dot ' + (i < n ? 'done' : i == n ? 'active' : 'inactive');
+    if (document.getElementById('line-' + i))
+      document.getElementById('line-' + i).className = 'step-line' + (i < n ? ' done' : '');
+  });
+}
+
+function showError(id, show) {
+  const el = document.getElementById(id);
+  el.style.display = show ? 'block' : 'none';
+}
+
+document.getElementById('btn-step1-next').addEventListener('click', () => {
+  const checked = document.querySelectorAll('.service-item.checked').length;
+  if (!checked) { showError('step1-error', true); return; }
+  showError('step1-error', false);
+  showStep(2);
+});
+
+document.getElementById('btn-step2-back').addEventListener('click', () => showStep(1));
+document.getElementById('btn-step2-next').addEventListener('click', () => {
+  if (!document.getElementById('address').value.trim()) { showError('step2-error', true); return; }
+  showError('step2-error', false);
+  showStep(3);
+});
+
+document.getElementById('btn-step3-back').addEventListener('click', () => showStep(2));
+
+document.getElementById('btn-submit').addEventListener('click', async () => {
+  const firstName = document.getElementById('firstName').value.trim();
+  if (!firstName) { showError('step3-error', true); return; }
+  showError('step3-error', false);
+
+  const services = [...document.querySelectorAll('.service-item.checked')]
+    .map(el => el.querySelector('input').value);
+  const property = {
+    address: document.getElementById('address').value,
+    propertyType: document.querySelector('[name=propertyType]:checked')?.value,
+    lotSize: document.getElementById('lotSize').value,
+    condition: document.getElementById('condition').value,
+    timeline: document.getElementById('timeline').value,
+    hoa: document.querySelector('[name=hoa]:checked')?.value,
+  };
+  const contact = {
+    firstName,
+    lastName: document.getElementById('lastName').value,
+    phone: document.getElementById('phone').value,
+    email: document.getElementById('email').value,
+    contactMethod: document.querySelector('[name=contactMethod]:checked')?.value,
+    notes: document.getElementById('notes').value,
+  };
+
+  showStep('generating');
+
+  try {
+    const res = await fetch('/api/submit', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ services, property, contact, cityName: 'Las Vegas', lang: 'es' }),
+    });
+    const data = await res.json();
+    renderEstimate(data.estimate);
+  } catch(e) {
+    renderEstimate(null);
+  }
+});
+
+function renderEstimate(est) {
+  if (!est) {
+    document.getElementById('result-total').textContent = 'Presupuesto no disponible';
+    document.getElementById('result-summary').textContent = 'Hubo un problema al generar tu presupuesto. Por favor llámanos al (702) 528-8324.';
+    document.getElementById('result-line-items').innerHTML = '';
+    document.getElementById('result-lv-notes').innerHTML = '';
+    document.getElementById('result-next-steps').innerHTML = '';
+    document.getElementById('result-disclaimer').innerHTML = '';
+    showStep('result');
+    return;
+  }
+  document.getElementById('result-total').textContent = est.totalRange || '';
+  document.getElementById('result-timeline').textContent = est.projectTimeline ? `Duración estimada: ${est.projectTimeline}` : '';
+  document.getElementById('result-summary').textContent = est.summary || '';
+  const liEl = document.getElementById('result-line-items');
+  liEl.innerHTML = (est.lineItems || []).map(item => `
+    <div class="line-item">
+      <div><div class="line-item-name">${item.service}</div><div class="line-item-desc">${item.description || ''}</div><div class="line-item-time">${item.timeline || ''}</div></div>
+      <div class="line-item-price">${item.priceRange}</div>
+    </div>`).join('');
+  const notesEl = document.getElementById('result-lv-notes');
+  if (est.lasVegasNotes?.length) {
+    notesEl.innerHTML = `<div class="lv-notes-title">💡 Notas Locales — Las Vegas</div><ul>${est.lasVegasNotes.map(n => `<li>${n}</li>`).join('')}</ul>`;
+    notesEl.style.display = '';
+  } else { notesEl.style.display = 'none'; }
+  document.getElementById('result-next-steps').innerHTML = est.nextSteps ? `<strong>Próximos Pasos:</strong> ${est.nextSteps}` : '';
+  document.getElementById('result-disclaimer').textContent = est.disclaimer || '';
+  showStep('result');
+}
+
+document.getElementById('btn-restart').addEventListener('click', () => {
+  document.querySelectorAll('.service-item').forEach(i => i.classList.remove('checked'));
+  document.getElementById('service-count').textContent = '';
+  showStep(1);
+});
+
+// FAQ
+document.querySelectorAll('.faq-q').forEach(btn => {
+  btn.addEventListener('click', () => {
+    const item = btn.closest('.faq-item');
+    const isOpen = item.classList.contains('open');
+    document.querySelectorAll('.faq-item').forEach(i => { i.classList.remove('open'); i.querySelector('.faq-q').setAttribute('aria-expanded','false'); });
+    if (!isOpen) { item.classList.add('open'); btn.setAttribute('aria-expanded','true'); }
+  });
+});
+</script>
+
+</body>
+</html>

@@ -1,0 +1,147 @@
+---
+export const prerender = false;
+// Already logged in? Go to dashboard
+import { verifySession } from '../../lib/db.js';
+const cookie = Astro.cookies.get('admin_session');
+if (verifySession(cookie?.value)) {
+  return Astro.redirect('/admin');
+}
+---
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Admin Login — Las Vegas Landscaping</title>
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+    body {
+      font-family: 'Segoe UI', system-ui, sans-serif;
+      background: #0f2a1e;
+      min-height: 100vh;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+    .card {
+      background: #fff;
+      border-radius: 16px;
+      padding: 48px 40px;
+      width: 100%;
+      max-width: 400px;
+      box-shadow: 0 20px 60px rgba(0,0,0,0.4);
+    }
+    .logo {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      margin-bottom: 32px;
+    }
+    .logo-icon {
+      width: 44px; height: 44px;
+      background: #d4a017;
+      border-radius: 50%;
+      display: flex; align-items: center; justify-content: center;
+      font-size: 1.3rem;
+    }
+    .logo-text { font-weight: 700; font-size: 1.05rem; color: #1a1a1a; line-height: 1.2; }
+    .logo-sub  { font-size: 0.72rem; color: #888; font-weight: 400; }
+    h1 { font-size: 1.5rem; font-weight: 700; color: #1a1a1a; margin-bottom: 6px; }
+    p  { font-size: 0.875rem; color: #666; margin-bottom: 28px; }
+    label { display: block; font-size: 0.8rem; font-weight: 600; color: #444; margin-bottom: 6px; }
+    input {
+      width: 100%;
+      border: 1.5px solid #ddd;
+      border-radius: 8px;
+      padding: 10px 14px;
+      font-size: 0.95rem;
+      outline: none;
+      transition: border-color 0.2s;
+      margin-bottom: 18px;
+    }
+    input:focus { border-color: #2d6b4e; }
+    .btn {
+      width: 100%;
+      background: #1a4731;
+      color: #fff;
+      border: none;
+      border-radius: 8px;
+      padding: 12px;
+      font-size: 1rem;
+      font-weight: 700;
+      cursor: pointer;
+      transition: background 0.2s;
+    }
+    .btn:hover { background: #2d6b4e; }
+    .btn:disabled { opacity: 0.6; cursor: not-allowed; }
+    .error {
+      background: #fef2f2;
+      border: 1px solid #fca5a5;
+      color: #b91c1c;
+      border-radius: 8px;
+      padding: 10px 14px;
+      font-size: 0.85rem;
+      margin-bottom: 16px;
+      display: none;
+    }
+  </style>
+</head>
+<body>
+  <div class="card">
+    <div class="logo">
+      <div class="logo-icon">🌵</div>
+      <div class="logo-text">
+        Las Vegas Landscaping
+        <div class="logo-sub">Admin Portal</div>
+      </div>
+    </div>
+
+    <h1>Sign In</h1>
+    <p>Enter your admin password to view leads.</p>
+
+    <div class="error" id="error-msg"></div>
+
+    <form id="login-form">
+      <label for="password">Password</label>
+      <input type="password" id="password" placeholder="Enter admin password" autocomplete="current-password" required />
+      <button class="btn" type="submit" id="btn">Sign In →</button>
+    </form>
+  </div>
+
+  <script>
+    document.getElementById('login-form').addEventListener('submit', async (e) => {
+      e.preventDefault();
+      const btn = document.getElementById('btn');
+      const errEl = document.getElementById('error-msg');
+      const password = document.getElementById('password').value;
+
+      btn.disabled = true;
+      btn.textContent = 'Signing in…';
+      errEl.style.display = 'none';
+
+      try {
+        const res = await fetch('/api/admin/login', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ password }),
+        });
+        const data = await res.json();
+
+        if (res.ok) {
+          window.location.href = '/admin';
+        } else {
+          errEl.textContent = data.error || 'Invalid password.';
+          errEl.style.display = 'block';
+          btn.disabled = false;
+          btn.textContent = 'Sign In →';
+        }
+      } catch {
+        errEl.textContent = 'Connection error. Try again.';
+        errEl.style.display = 'block';
+        btn.disabled = false;
+        btn.textContent = 'Sign In →';
+      }
+    });
+  </script>
+</body>
+</html>

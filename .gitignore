@@ -1,0 +1,7 @@
+node_modules/
+dist/
+.env
+.DS_Store
+*.log
+# Lead database — keep on server, don't commit to git
+data/

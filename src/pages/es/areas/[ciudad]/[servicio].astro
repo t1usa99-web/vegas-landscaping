@@ -1,0 +1,430 @@
+---
+import { cities, getCity, getNearbyCities } from '../../../../data/cities.js';
+import { services, getService, getRelatedServices } from '../../../../data/services.js';
+import { serviceTranslations, getCityTranslation } from '../../../../data/translations-es.js';
+
+const { ciudad, servicio } = Astro.params;
+const service = getService(servicio);
+const city = getCity(ciudad);
+if (!service || !city) return Astro.redirect('/es/areas');
+
+const t = serviceTranslations[servicio];
+const cityTrans = getCityTranslation(ciudad);
+const relatedServices = getRelatedServices(servicio);
+const nearbyCities = getNearbyCities(ciudad);
+const allOtherServices = services.filter(s => s.slug !== servicio);
+
+const SITE = 'https://lasvegaslandscaping.homepropeople.com';
+const nameEs = t?.nameEs || service.name;
+const metaDescEs = t?.metaDescEs || service.metaDesc;
+const heroDescEs = t?.heroDescEs || service.heroDesc;
+const questionsEs = t?.questionsEs || service.questions;
+const whyUsEs = t?.whyUsEs || service.whyUs;
+const processEs = t?.processEs || service.process;
+const startingPriceEs = t?.startingPriceEs || service.startingPrice;
+
+const pageTitle = `${nameEs} en ${city.name}, NV | Las Vegas Landscaping`;
+const pageDesc = `${metaDescEs} Servicio en ${city.name} y todas las áreas circundantes.`;
+
+const jsonLd = {
+  "@context": "https://schema.org",
+  "@type": "LocalBusiness",
+  "name": "Las Vegas Landscaping",
+  "description": pageDesc,
+  "areaServed": city.name,
+  "serviceType": nameEs,
+  "telephone": "(702) 528-8324",
+  "inLanguage": "es",
+  "address": { "@type": "PostalAddress", "addressLocality": city.name, "addressRegion": "NV", "addressCountry": "US" }
+};
+const breadcrumb = {
+  "@context": "https://schema.org",
+  "@type": "BreadcrumbList",
+  "itemListElement": [
+    { "@type": "ListItem", "position": 1, "name": "Inicio", "item": `${SITE}/es/` },
+    { "@type": "ListItem", "position": 2, "name": "Áreas de Servicio", "item": `${SITE}/es/areas` },
+    { "@type": "ListItem", "position": 3, "name": city.name, "item": `${SITE}/es/areas/${ciudad}` },
+    { "@type": "ListItem", "position": 4, "name": nameEs, "item": `${SITE}/es/areas/${ciudad}/${servicio}` }
+  ]
+};
+---
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>{pageTitle}</title>
+  <meta name="description" content={pageDesc} />
+  <meta name="robots" content="index, follow" />
+  <link rel="canonical" href={`${SITE}/es/areas/${ciudad}/${servicio}`} />
+  <link rel="alternate" hreflang="en" href={`${SITE}/areas/${ciudad}/${servicio}`} />
+  <link rel="alternate" hreflang="es" href={`${SITE}/es/areas/${ciudad}/${servicio}`} />
+  <link rel="alternate" hreflang="x-default" href={`${SITE}/areas/${ciudad}/${servicio}`} />
+  <meta property="og:url" content={`${SITE}/es/areas/${ciudad}/${servicio}`} />
+  <meta property="og:title" content={pageTitle} />
+  <meta property="og:description" content={pageDesc} />
+  <meta property="og:type" content="website" />
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Inter:ital,wght@0,400;0,500;0,600;0,700;0,800;1,400&display=swap&font-display=swap" rel="stylesheet" />
+  <script type="application/ld+json" set:html={JSON.stringify(jsonLd)} />
+  <script type="application/ld+json" set:html={JSON.stringify(breadcrumb)} />
+  <style>
+    :root{--g900:#0f2a1e;--g800:#1a4731;--g700:#2d6b4e;--g600:#3d8c62;--g100:#e8f4ee;--g50:#f4faf6;--gold:#d4a017;--gold2:#f0c040;--text:#1a1a1a;--muted:#6b7280;--border:#e2e8f0;--shadow:0 4px 20px rgba(0,0,0,0.08);--radius:12px}
+    *,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+    body{font-family:'Inter',sans-serif;color:var(--text);background:#fff;line-height:1.6}
+    a{color:inherit;text-decoration:none}
+    .site-header{background:var(--g900);padding:0 24px;position:sticky;top:0;z-index:100}
+    .header-inner{max-width:1100px;margin:0 auto;display:flex;align-items:center;justify-content:space-between;height:60px;gap:16px}
+    .logo{display:flex;align-items:center;gap:10px}
+    .logo-name{font-weight:800;font-size:1rem;color:white;display:block}
+    .logo-sub{font-size:0.7rem;color:rgba(255,255,255,0.55)}
+    nav{display:flex;align-items:center;gap:14px}
+    nav a{color:rgba(255,255,255,0.75);font-size:0.875rem;font-weight:500}
+    nav a:hover{color:white}
+    .btn-call{background:var(--gold);color:var(--g900)!important;padding:8px 16px;border-radius:6px;font-weight:700!important;font-size:0.8rem!important;white-space:nowrap}
+    .lang-link{color:rgba(255,255,255,0.6);font-size:0.8rem;border:1px solid rgba(255,255,255,0.2);padding:4px 10px;border-radius:5px}
+    .page-hero{background:linear-gradient(135deg,var(--g900) 0%,var(--g800) 100%);color:white;padding:56px 24px 48px}
+    .hero-inner{max-width:1100px;margin:0 auto}
+    .breadcrumb{font-size:0.8rem;color:rgba(255,255,255,0.55);margin-bottom:16px}
+    .breadcrumb a{color:rgba(255,255,255,0.55)}
+    .breadcrumb a:hover{color:white}
+    .page-hero h1{font-size:clamp(1.5rem,3.5vw,2.3rem);font-weight:800;margin-bottom:12px}
+    .page-hero p{color:rgba(255,255,255,0.82);font-size:1rem;max-width:640px;margin-bottom:20px}
+    .hero-actions{display:flex;gap:12px;flex-wrap:wrap;margin-bottom:20px}
+    .btn-hero{background:var(--gold);color:var(--g900);padding:12px 22px;border-radius:8px;font-weight:800;font-size:0.9rem;transition:background 0.15s}
+    .btn-hero:hover{background:var(--gold2)}
+    .btn-hero-sec{background:rgba(255,255,255,0.1);border:1px solid rgba(255,255,255,0.25);color:white;padding:12px 20px;border-radius:8px;font-weight:600;font-size:0.85rem}
+    .trust-row{font-size:0.8rem;color:rgba(255,255,255,0.65)}
+    .main{max-width:1100px;margin:0 auto;padding:56px 24px}
+    .layout{display:grid;grid-template-columns:1fr 280px;gap:40px;align-items:start}
+    @media(max-width:800px){.layout{grid-template-columns:1fr}}
+    .section-eyebrow{font-size:0.75rem;font-weight:700;text-transform:uppercase;letter-spacing:0.1em;color:var(--g600);margin-bottom:8px}
+    h2{font-size:clamp(1.2rem,2.5vw,1.6rem);font-weight:800;color:var(--g900);margin-bottom:20px}
+    h3{font-size:1rem;font-weight:700;color:var(--g900);margin-bottom:6px}
+    .why-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(220px,1fr));gap:16px;margin-bottom:40px}
+    .why-card{background:var(--g50);border:1px solid var(--g100);border-radius:var(--radius);padding:20px}
+    .why-icon{font-size:1.5rem;margin-bottom:10px}
+    .why-desc{font-size:0.85rem;color:var(--muted);line-height:1.6}
+    .process-steps{display:flex;flex-direction:column;gap:16px;margin-bottom:40px}
+    .process-step{display:flex;gap:16px;align-items:flex-start}
+    .process-num{width:36px;height:36px;background:var(--g800);color:white;border-radius:50%;display:flex;align-items:center;justify-content:center;font-weight:800;font-size:0.9rem;flex-shrink:0}
+    .process-content p{font-size:0.875rem;color:var(--muted);line-height:1.6}
+    .estimate-form{background:var(--g50);border:1px solid var(--g100);border-radius:var(--radius);padding:28px;margin-bottom:40px}
+    .estimate-form h2{color:var(--g900)}
+    .estimate-form p{font-size:0.875rem;color:var(--muted);margin-bottom:20px}
+    .q-block{margin-bottom:20px}
+    .q-label{font-size:0.8rem;font-weight:700;color:var(--g900);margin-bottom:10px}
+    .q-options{display:flex;flex-wrap:wrap;gap:8px}
+    .q-option{padding:8px 14px;border:1.5px solid var(--border);border-radius:8px;font-size:0.8rem;font-weight:500;cursor:pointer;transition:all 0.15s;background:white;user-select:none}
+    .q-option:hover{border-color:var(--g500)}
+    .q-option.sel{border-color:var(--g600);background:var(--g100);color:var(--g900);font-weight:600}
+    .form-row{display:grid;grid-template-columns:1fr 1fr;gap:12px;margin-bottom:16px}
+    @media(max-width:500px){.form-row{grid-template-columns:1fr}}
+    .form-group{display:flex;flex-direction:column;gap:4px}
+    .form-group label{font-size:0.75rem;font-weight:600;color:var(--muted);text-transform:uppercase;letter-spacing:0.06em}
+    .form-group input{padding:10px 12px;border:1.5px solid var(--border);border-radius:8px;font-size:0.9rem;font-family:inherit}
+    .form-group input:focus{outline:none;border-color:var(--g600)}
+    .btn-submit{width:100%;background:var(--g700);color:white;border:none;padding:14px;border-radius:8px;font-weight:800;font-size:1rem;cursor:pointer;font-family:inherit;transition:background 0.15s;margin-top:8px}
+    .btn-submit:hover{background:var(--g900)}
+    .generating{text-align:center;padding:32px;display:none}
+    .spinner{width:36px;height:36px;border:3px solid var(--g100);border-top-color:var(--g700);border-radius:50%;animation:spin 0.8s linear infinite;margin:0 auto 12px}
+    @keyframes spin{to{transform:rotate(360deg)}}
+    .result-box{display:none;padding:4px 0}
+    .result-total{background:var(--g50);border:2px solid var(--g600);border-radius:10px;padding:18px;text-align:center;margin-bottom:16px}
+    .result-total-lbl{font-size:0.7rem;font-weight:700;text-transform:uppercase;letter-spacing:0.08em;color:var(--g600);margin-bottom:4px}
+    .result-total-amt{font-size:1.8rem;font-weight:800;color:var(--g900)}
+    .result-summary{font-size:0.875rem;color:var(--text);line-height:1.7;margin-bottom:14px;background:var(--g50);padding:14px;border-radius:8px}
+    .result-items{border:1px solid var(--border);border-radius:8px;overflow:hidden;margin-bottom:14px}
+    .result-item{display:grid;grid-template-columns:1fr auto;gap:12px;padding:12px 14px;border-bottom:1px solid var(--border);font-size:0.8rem}
+    .result-item:last-child{border-bottom:none}
+    .result-item:nth-child(even){background:var(--g50)}
+    .result-item-name{font-weight:600;color:var(--g900)}
+    .result-item-price{font-weight:700;color:var(--g800);white-space:nowrap}
+    .result-notes{background:#fffbeb;border:1px solid #fde68a;border-radius:8px;padding:14px;margin-bottom:12px;font-size:0.8rem}
+    .result-notes ul{list-style:none;display:flex;flex-direction:column;gap:5px}
+    .result-notes li::before{content:'💡 ';flex-shrink:0}
+    .result-disclaimer{font-size:0.7rem;color:var(--muted);line-height:1.5;padding-top:10px;border-top:1px solid var(--border)}
+    .result-cta{display:flex;gap:10px;flex-wrap:wrap;margin-top:14px}
+    .btn-call-result{background:var(--g700);color:white;padding:11px 18px;border-radius:8px;font-weight:700;font-size:0.875rem;display:flex;align-items:center;gap:6px}
+    .btn-reset{background:var(--g50);border:1.5px solid var(--border);color:var(--text);padding:11px 18px;border-radius:8px;font-weight:600;font-size:0.875rem;cursor:pointer;font-family:inherit}
+    .sidebar-card{background:var(--g900);color:white;border-radius:var(--radius);padding:24px;margin-bottom:20px}
+    .sidebar-card h3{font-size:0.95rem;font-weight:700;margin-bottom:14px;color:var(--gold2)}
+    .sidebar-cta{display:block;background:var(--gold);color:var(--g900);text-align:center;padding:12px;border-radius:8px;font-weight:800;font-size:0.875rem;margin-bottom:12px}
+    .sidebar-links{list-style:none;display:flex;flex-direction:column;gap:8px}
+    .sidebar-links li a{font-size:0.8rem;color:rgba(255,255,255,0.75);display:flex;align-items:center;gap:6px}
+    .sidebar-links li a:hover{color:white}
+    .price-badge{background:rgba(240,192,64,0.15);border:1px solid rgba(240,192,64,0.3);border-radius:8px;padding:12px;text-align:center;margin-bottom:16px}
+    .price-badge-from{font-size:0.7rem;color:rgba(255,255,255,0.6);text-transform:uppercase;letter-spacing:0.06em}
+    .price-badge-amt{font-size:1.3rem;font-weight:800;color:var(--gold2)}
+    footer{background:var(--g900);color:rgba(255,255,255,0.7);text-align:center;padding:28px 24px;font-size:0.8rem;margin-top:56px}
+    footer a{color:var(--gold2);font-weight:700;margin:0 8px}
+  </style>
+</head>
+<body>
+<header class="site-header">
+  <div class="header-inner">
+    <a href="/es/" class="logo">
+      <svg width="32" height="32" viewBox="0 0 38 38" fill="none" aria-hidden="true">
+        <circle cx="19" cy="19" r="19" fill="#2d6b4e"/>
+        <path d="M19 8C13 8 8 13 8 19s5 11 11 11c1.8 0 3.5-.5 5-1.3L19 24l-3-6 6-3 3 6-3 3.7C25.5 23 27 21 27 19c0-6-4-10.5-8-11z" fill="white"/>
+        <path d="M19 8c.7 3 1.8 10-3 14.5" stroke="#d4a017" stroke-width="2" stroke-linecap="round" fill="none"/>
+      </svg>
+      <div><span class="logo-name">Las Vegas Landscaping</span><span class="logo-sub">Con Licencia • Asegurado</span></div>
+    </a>
+    <nav>
+      <a href="/es/">Inicio</a>
+      <a href="/es/areas">Áreas</a>
+      <a href={`/es/areas/${ciudad}`}>{city.name}</a>
+      <a href={`/areas/${ciudad}/${servicio}`} class="lang-link">🇺🇸 English</a>
+      <a href="tel:7025288324" class="btn-call">📞 (702) 528-8324</a>
+    </nav>
+  </div>
+</header>
+
+<div class="page-hero">
+  <div class="hero-inner">
+    <div class="breadcrumb">
+      <a href="/es/">Inicio</a> › <a href="/es/areas">Áreas</a> › <a href={`/es/areas/${ciudad}`}>{city.name}</a> › {nameEs}
+    </div>
+    <h1>{nameEs} en {city.name}, NV</h1>
+    <p>{heroDescEs}</p>
+    <div class="hero-actions">
+      <a href="#cotizacion" class="btn-hero">Obtener Mi Cotización Gratis →</a>
+      <a href="tel:7025288324" class="btn-hero-sec">📞 (702) 528-8324</a>
+    </div>
+    <div class="trust-row">4.9/5 ★ &bull; 500+ Reseñas &bull; Servicio en {city.name}</div>
+  </div>
+</div>
+
+<main class="main">
+  <div class="layout">
+    <div>
+      <!-- Why Us -->
+      <div class="section-eyebrow">Por Qué Elegirnos</div>
+      <h2>Nuestra Promesa en {city.name}</h2>
+      <div class="why-grid">
+        {whyUsEs.map(w => (
+          <div class="why-card">
+            <div class="why-icon">{w.icon}</div>
+            <h3>{w.title}</h3>
+            <p class="why-desc">{w.desc}</p>
+          </div>
+        ))}
+      </div>
+
+      <!-- Process -->
+      <div class="section-eyebrow">Nuestro Proceso</div>
+      <h2>Cómo Trabajamos</h2>
+      <div class="process-steps">
+        {processEs.map((step, i) => (
+          <div class="process-step">
+            <div class="process-num">{i + 1}</div>
+            <div class="process-content">
+              <h3>{step.title}</h3>
+              <p>{step.desc}</p>
+            </div>
+          </div>
+        ))}
+      </div>
+
+      <!-- Estimate Form -->
+      <div class="estimate-form" id="cotizacion">
+        <div class="section-eyebrow">Presupuesto Gratis</div>
+        <h2>{nameEs} en {city.name} — Cotización Instantánea</h2>
+        <p>Responde unas preguntas rápidas y nuestra IA genera un presupuesto detallado para tu proyecto en {city.name} al instante.</p>
+
+        <div id="form-questions">
+          {questionsEs.map((q, qi) => (
+            <div class="q-block" data-qi={qi}>
+              <div class="q-label">{q.q}</div>
+              <div class="q-options">
+                {q.options.map(opt => (
+                  <button class="q-option" data-qi={qi} data-val={opt} type="button">{opt}</button>
+                ))}
+              </div>
+            </div>
+          ))}
+          <div class="form-row" style="margin-top:20px">
+            <div class="form-group">
+              <label for="es-firstName">Nombre *</label>
+              <input type="text" id="es-firstName" placeholder="María" autocomplete="given-name" />
+            </div>
+            <div class="form-group">
+              <label for="es-phone">Teléfono</label>
+              <input type="tel" id="es-phone" placeholder="(702) 528-8324" autocomplete="tel" />
+            </div>
+          </div>
+          <div id="form-error" style="color:#dc2626;font-size:0.8rem;margin-bottom:8px;display:none">Por favor ingresa tu nombre para continuar.</div>
+          <button class="btn-submit" id="es-submit">✨ Generar Mi Cotización con IA</button>
+        </div>
+
+        <div class="generating" id="es-generating">
+          <div class="spinner"></div>
+          <p style="font-weight:600">Generando cotización para {city.name}…</p>
+        </div>
+
+        <div class="result-box" id="es-result">
+          <div class="result-total">
+            <div class="result-total-lbl">Rango Total Estimado</div>
+            <div class="result-total-amt" id="es-result-total"></div>
+            <div style="font-size:0.8rem;color:var(--muted);margin-top:4px" id="es-result-timeline"></div>
+          </div>
+          <div class="result-summary" id="es-result-summary"></div>
+          <div class="result-items" id="es-result-items"></div>
+          <div class="result-notes" id="es-result-notes"></div>
+          <div class="result-disclaimer" id="es-result-disclaimer"></div>
+          <div class="result-cta">
+            <a href="tel:7025288324" class="btn-call-result">📞 Consulta Gratuita en {city.name}</a>
+            <button class="btn-reset" id="es-reset">Empezar de Nuevo</button>
+          </div>
+        </div>
+      </div>
+
+      <!-- Local info -->
+      <div style="background:var(--g50);border:1px solid var(--g100);border-radius:var(--radius);padding:24px;margin-bottom:40px">
+        <h3 style="margin-bottom:12px">🌵 {nameEs} en {city.name}: Lo Que Debes Saber</h3>
+        <p style="font-size:0.875rem;color:var(--muted);line-height:1.7;margin-bottom:10px">{heroDescEs}</p>
+        {cityTrans.localNoteEs && <p style="font-size:0.85rem;color:var(--muted)">📍 <strong>Área de servicio:</strong> {cityTrans.localNoteEs}</p>}
+        {cityTrans.hoaNoteEs && <p style="font-size:0.85rem;color:var(--muted);margin-top:6px">🏘️ <strong>HOA:</strong> {cityTrans.hoaNoteEs}</p>}
+      </div>
+    </div>
+
+    <!-- Sidebar -->
+    <aside>
+      <div class="sidebar-card">
+        <div class="price-badge">
+          <div class="price-badge-from">Precio Inicial</div>
+          <div class="price-badge-amt">{startingPriceEs}</div>
+        </div>
+        <h3>¿Listo para Comenzar?</h3>
+        <a href="#cotizacion" class="sidebar-cta">Cotización Instantánea con IA →</a>
+        <div style="text-align:center;margin-bottom:16px">
+          <a href="tel:7025288324" style="color:rgba(255,255,255,0.8);font-size:0.875rem">📞 (702) 528-8324</a>
+        </div>
+
+        {relatedServices.length > 0 && (
+          <>
+            <div style="font-size:0.7rem;font-weight:700;text-transform:uppercase;letter-spacing:0.08em;color:rgba(255,255,255,0.5);margin-bottom:8px">Servicios Relacionados</div>
+            <ul class="sidebar-links">
+              {relatedServices.map(rs => {
+                const rt = serviceTranslations[rs.slug];
+                return <li><a href={`/es/areas/${ciudad}/${rs.slug}`}>{rs.emoji} {rt?.shortNameEs || rs.shortName}</a></li>;
+              })}
+            </ul>
+          </>
+        )}
+      </div>
+
+      {nearbyCities.length > 0 && (
+        <div class="sidebar-card">
+          <h3>Ciudades Cercanas</h3>
+          <ul class="sidebar-links">
+            {nearbyCities.map(nc => (
+              <li><a href={`/es/areas/${nc.slug}/${servicio}`}>🌵 {nameEs} en {nc.name}</a></li>
+            ))}
+          </ul>
+        </div>
+      )}
+
+      <div class="sidebar-card">
+        <h3>Otros Servicios en {city.name}</h3>
+        <ul class="sidebar-links">
+          {allOtherServices.slice(0,6).map(s => {
+            const st = serviceTranslations[s.slug];
+            return <li><a href={`/es/areas/${ciudad}/${s.slug}`}>{s.emoji} {st?.shortNameEs || s.shortName}</a></li>;
+          })}
+        </ul>
+      </div>
+    </aside>
+  </div>
+</main>
+
+<footer>
+  <div style="margin-bottom:10px">
+    <a href="/es/">Inicio</a>
+    <a href="/es/areas">Áreas</a>
+    <a href={`/es/areas/${ciudad}`}>{city.name}</a>
+    <a href="tel:7025288324">(702) 528-8324</a>
+    <a href={`/areas/${ciudad}/${servicio}`}>🇺🇸 English</a>
+  </div>
+  © {new Date().getFullYear()} Las Vegas Landscaping — Con Licencia • Asegurado
+</footer>
+
+<script is:inline define:vars={{ servicio, city_name: city.name, nameEs, citySlug: ciudad }}>
+const answers = {};
+document.querySelectorAll('.q-option').forEach(btn => {
+  btn.addEventListener('click', () => {
+    const qi = btn.dataset.qi;
+    document.querySelectorAll(`.q-option[data-qi="${qi}"]`).forEach(b => b.classList.remove('sel'));
+    btn.classList.add('sel');
+    answers[qi] = btn.dataset.val;
+  });
+});
+
+document.getElementById('es-submit').addEventListener('click', async () => {
+  const firstName = document.getElementById('es-firstName').value.trim();
+  if (!firstName) { document.getElementById('form-error').style.display='block'; return; }
+  document.getElementById('form-error').style.display='none';
+
+  const answersText = Object.entries(answers)
+    .map(([qi, val]) => `Pregunta ${parseInt(qi)+1}: ${val}`).join('\n');
+
+  document.getElementById('form-questions').style.display = 'none';
+  document.getElementById('es-generating').style.display = 'block';
+
+  try {
+    const res = await fetch('/api/submit', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({
+        services: [nameEs],
+        property: { address: `${city_name}, NV`, propertyType: 'Residential - Single Family', lotSize: 'Medium (5,000–10,000 sq ft)', condition: 'Partially landscaped — needs refresh', timeline: '1–3 months', hoa: 'Not sure' },
+        contact: { firstName, phone: document.getElementById('es-phone').value },
+        serviceAnswers: answers,
+        answersText,
+        cityName: city_name,
+        lang: 'es'
+      })
+    });
+    const data = await res.json();
+    renderResult(data.estimate);
+  } catch(e) {
+    renderResult(null);
+  }
+});
+
+function renderResult(est) {
+  document.getElementById('es-generating').style.display = 'none';
+  const rb = document.getElementById('es-result');
+  rb.style.display = 'block';
+  if (!est) {
+    document.getElementById('es-result-total').textContent = 'Cotización no disponible';
+    document.getElementById('es-result-summary').textContent = 'Hubo un problema. Por favor llámanos al (702) 528-8324.';
+    return;
+  }
+  document.getElementById('es-result-total').textContent = est.totalRange || '';
+  document.getElementById('es-result-timeline').textContent = est.projectTimeline ? `Duración: ${est.projectTimeline}` : '';
+  document.getElementById('es-result-summary').textContent = est.summary || '';
+  const items = document.getElementById('es-result-items');
+  items.innerHTML = (est.lineItems || []).map(item => `
+    <div class="result-item">
+      <div><div class="result-item-name">${item.service}</div><div style="font-size:0.75rem;color:var(--muted)">${item.description || ''}</div></div>
+      <div class="result-item-price">${item.priceRange}</div>
+    </div>`).join('');
+  const notes = document.getElementById('es-result-notes');
+  if (est.lasVegasNotes?.length) {
+    notes.innerHTML = `<strong style="font-size:0.75rem;text-transform:uppercase;letter-spacing:0.06em;color:#92400e">💡 Notas de ${city_name}</strong><ul style="margin-top:8px">${est.lasVegasNotes.map(n=>`<li style="font-size:0.8rem;color:#78350f;margin-bottom:4px">${n}</li>`).join('')}</ul>`;
+  } else { notes.style.display='none'; }
+  document.getElementById('es-result-disclaimer').textContent = est.disclaimer || '';
+}
+
+document.getElementById('es-reset').addEventListener('click', () => {
+  document.getElementById('es-result').style.display = 'none';
+  document.getElementById('form-questions').style.display = 'block';
+  document.querySelectorAll('.q-option').forEach(b => b.classList.remove('sel'));
+  Object.keys(answers).forEach(k => delete answers[k]);
+});
+</script>
+</body>
+</html>

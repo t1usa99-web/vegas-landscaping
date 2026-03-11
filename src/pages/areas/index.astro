@@ -1,0 +1,297 @@
+---
+import { services } from '../../data/services.js';
+import { cities } from '../../data/cities.js';
+
+const pageTitle = 'Landscaping Service Areas | Las Vegas Valley | Las Vegas Landscaping';
+const pageDesc = 'Professional landscaping services across the Las Vegas Valley — Henderson, Summerlin, North Las Vegas, Green Valley, Anthem, and all surrounding communities.';
+
+// Pre-compute short climate labels to avoid complex expressions in JSX template
+const cityClimateMap = Object.fromEntries(
+  cities.map(c => [c.slug, c.climate.split('\u2014')[0].trim()])
+);
+---
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>{pageTitle}</title>
+  <meta name="description" content={pageDesc} />
+  <meta name="robots" content="index, follow" />
+  <link rel="canonical" href="https://lasvegaslandscaping.homepropeople.com/areas" />
+  <meta property="og:url" content="https://lasvegaslandscaping.homepropeople.com/areas" />
+  <link rel="alternate" hreflang="en" href="https://lasvegaslandscaping.homepropeople.com/areas" />
+  <link rel="alternate" hreflang="es" href="https://lasvegaslandscaping.homepropeople.com/es/areas" />
+  <link rel="alternate" hreflang="x-default" href="https://lasvegaslandscaping.homepropeople.com/areas" />
+  <meta property="og:title" content={pageTitle} />
+  <meta property="og:description" content={pageDesc} />
+  <meta property="og:type" content="website" />
+
+  <style>
+    :root {
+      --g900: #0f2a1e;
+      --g800: #1a4731;
+      --g700: #2d6b4e;
+      --g100: #e8f4ee;
+      --gold: #d4a017;
+      --gold2: #f0c040;
+      --sand: #faf8f4;
+      --text: #1a1a1a;
+      --muted: #666;
+      --radius: 12px;
+      --shadow: 0 4px 24px rgba(0,0,0,0.1);
+    }
+
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+    html { scroll-behavior: smooth; }
+    body { font-family: 'Segoe UI', system-ui, sans-serif; color: var(--text); background: #fff; }
+
+    /* Header */
+    .site-header { background: var(--g800); position: sticky; top: 0; z-index: 100; box-shadow: 0 2px 12px rgba(0,0,0,0.2); }
+    .header-inner { max-width: 1280px; margin: 0 auto; padding: 0 24px; height: 64px; display: flex; align-items: center; justify-content: space-between; }
+    .logo { display: flex; align-items: center; gap: 10px; text-decoration: none; }
+    .logo-icon { width: 36px; height: 36px; background: var(--gold); border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 1.1rem; }
+    .logo-text { color: #fff; font-weight: 700; font-size: 1rem; line-height: 1.1; }
+    .logo-sub { color: rgba(255,255,255,0.6); font-size: 0.7rem; font-weight: 400; }
+    nav { display: flex; align-items: center; gap: 24px; }
+    nav a { color: rgba(255,255,255,0.85); text-decoration: none; font-size: 0.9rem; transition: color 0.2s; }
+    nav a:hover { color: var(--gold2); }
+    .btn-call { background: var(--gold); color: #1a1a1a; padding: 8px 18px; border-radius: 8px; font-weight: 700; font-size: 0.875rem; text-decoration: none; white-space: nowrap; }
+
+    /* Breadcrumb */
+    .breadcrumb { background: #f5f5f5; border-bottom: 1px solid #e5e5e5; padding: 10px 0; }
+    .breadcrumb-inner { max-width: 1280px; margin: 0 auto; padding: 0 24px; display: flex; align-items: center; gap: 6px; font-size: 0.8rem; color: var(--muted); }
+    .breadcrumb a { color: var(--g700); text-decoration: none; }
+    .breadcrumb a:hover { text-decoration: underline; }
+    .breadcrumb span { color: #999; }
+
+    /* Hero */
+    .hero {
+      background: linear-gradient(135deg, var(--g900) 0%, var(--g800) 60%, var(--g700) 100%);
+      color: #fff;
+      text-align: center;
+      padding: 60px 24px 52px;
+    }
+    .hero-eyebrow { font-size: 0.75rem; font-weight: 700; letter-spacing: 0.12em; text-transform: uppercase; opacity: 0.7; margin-bottom: 12px; }
+    .hero h1 { font-size: clamp(2rem, 4vw, 3rem); font-weight: 900; margin-bottom: 16px; line-height: 1.1; }
+    .hero p { font-size: 1.1rem; opacity: 0.85; max-width: 600px; margin: 0 auto 28px; line-height: 1.6; }
+    .hero-stats { display: flex; justify-content: center; gap: 40px; flex-wrap: wrap; }
+    .stat { text-align: center; }
+    .stat-num { font-size: 1.75rem; font-weight: 900; color: var(--gold2); }
+    .stat-label { font-size: 0.75rem; opacity: 0.7; text-transform: uppercase; letter-spacing: 0.05em; margin-top: 2px; }
+
+    /* Main */
+    .main { max-width: 1280px; margin: 0 auto; padding: 56px 24px 80px; }
+
+    /* Section headers */
+    .section-header { margin-bottom: 32px; }
+    .section-header h2 { font-size: 1.75rem; font-weight: 800; color: var(--g900); margin-bottom: 8px; }
+    .section-header p { color: var(--muted); font-size: 1rem; }
+
+    /* City grid */
+    .cities-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+      gap: 20px;
+      margin-bottom: 64px;
+    }
+    .city-card {
+      background: #fff;
+      border: 1.5px solid #e5e5e5;
+      border-radius: var(--radius);
+      padding: 24px;
+      text-decoration: none;
+      color: var(--text);
+      transition: all 0.2s;
+      display: flex;
+      flex-direction: column;
+    }
+    .city-card:hover { border-color: var(--g700); box-shadow: var(--shadow); transform: translateY(-2px); }
+    .city-card-top { display: flex; align-items: center; gap: 12px; margin-bottom: 12px; }
+    .city-icon { width: 40px; height: 40px; background: var(--g100); border-radius: 8px; display: flex; align-items: center; justify-content: center; font-size: 1.2rem; flex-shrink: 0; }
+    .city-name { font-size: 1.1rem; font-weight: 700; color: var(--g900); }
+    .city-state { font-size: 0.75rem; color: var(--muted); }
+    .city-note { font-size: 0.8rem; color: var(--muted); line-height: 1.5; margin-bottom: 16px; flex: 1; }
+    .city-services-count { font-size: 0.75rem; font-weight: 700; color: var(--g700); background: var(--g100); padding: 4px 10px; border-radius: 20px; display: inline-block; }
+
+    /* Services grid */
+    .services-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+      gap: 20px;
+      margin-bottom: 64px;
+    }
+    .service-card {
+      background: #fff;
+      border: 1.5px solid #e5e5e5;
+      border-radius: var(--radius);
+      padding: 24px;
+      transition: all 0.2s;
+    }
+    .service-card:hover { border-color: var(--g700); box-shadow: var(--shadow); }
+    .service-emoji { font-size: 2rem; margin-bottom: 12px; }
+    .service-name { font-size: 1.05rem; font-weight: 700; color: var(--g900); margin-bottom: 6px; }
+    .service-category { font-size: 0.7rem; font-weight: 700; text-transform: uppercase; letter-spacing: 0.05em; color: var(--g700); background: var(--g100); padding: 3px 8px; border-radius: 20px; display: inline-block; margin-bottom: 10px; }
+    .service-price { font-size: 0.85rem; color: var(--muted); margin-bottom: 14px; }
+    .service-cities { display: flex; flex-wrap: wrap; gap: 6px; }
+    .service-city-link {
+      font-size: 0.75rem;
+      color: var(--g700);
+      background: var(--g100);
+      padding: 3px 8px;
+      border-radius: 20px;
+      text-decoration: none;
+      transition: all 0.2s;
+    }
+    .service-city-link:hover { background: var(--g700); color: #fff; }
+
+    /* CTA Banner */
+    .cta-banner {
+      background: linear-gradient(135deg, var(--g800), var(--g700));
+      border-radius: 16px;
+      padding: 40px;
+      text-align: center;
+      color: #fff;
+    }
+    .cta-banner h2 { font-size: 1.75rem; font-weight: 800; margin-bottom: 12px; }
+    .cta-banner p { opacity: 0.85; font-size: 1rem; margin-bottom: 24px; }
+    .cta-btns { display: flex; justify-content: center; gap: 16px; flex-wrap: wrap; }
+    .btn-gold { background: var(--gold); color: #1a1a1a; padding: 14px 28px; border-radius: 8px; font-weight: 700; font-size: 1rem; text-decoration: none; }
+    .btn-outline { background: transparent; border: 2px solid rgba(255,255,255,0.5); color: #fff; padding: 14px 28px; border-radius: 8px; font-weight: 700; font-size: 1rem; text-decoration: none; }
+
+    @media (max-width: 600px) {
+      nav { display: none; }
+      .hero-stats { gap: 24px; }
+    }
+  </style>
+</head>
+<body>
+
+<!-- Header -->
+<header class="site-header">
+  <div class="header-inner">
+    <a href="/" class="logo">
+      <div class="logo-icon">🌵</div>
+      <div>
+        <div class="logo-text">Las Vegas Landscaping</div>
+        <div class="logo-sub">Licensed • Insured</div>
+      </div>
+    </a>
+    <nav>
+      <a href="/#services">Services</a>
+      <a href="/areas">Service Areas</a>
+      <a href="/#estimate">Free Estimate</a>
+      <a href="tel:7025288324" class="btn-call">📞 (702) 528-8324</a>
+    </nav>
+  </div>
+</header>
+
+<!-- Breadcrumb -->
+<div class="breadcrumb">
+  <div class="breadcrumb-inner">
+    <a href="/">Home</a>
+    <span>/</span>
+    <strong>Service Areas</strong>
+  </div>
+</div>
+
+<!-- Hero -->
+<section class="hero">
+  <div class="hero-eyebrow">Las Vegas Valley Coverage</div>
+  <h1>Landscaping Services Across<br />the Las Vegas Valley</h1>
+  <p>We serve {cities.length} cities and communities — from Summerlin to Henderson, North Las Vegas to Anthem. Same crew, same quality, everywhere we go.</p>
+  <div class="hero-stats">
+    <div class="stat">
+      <div class="stat-num">{cities.length}</div>
+      <div class="stat-label">Cities Served</div>
+    </div>
+    <div class="stat">
+      <div class="stat-num">{services.length}</div>
+      <div class="stat-label">Services Offered</div>
+    </div>
+    <div class="stat">
+      <div class="stat-num">500+</div>
+      <div class="stat-label">Projects Completed</div>
+    </div>
+    <div class="stat">
+      <div class="stat-num">20+</div>
+      <div class="stat-label">Years Experience</div>
+    </div>
+  </div>
+</section>
+
+<!-- Main -->
+<main class="main">
+
+  <!-- Cities Section -->
+  <div class="section-header">
+    <h2>📍 Select Your City</h2>
+    <p>Click your city to see all available services and get a free AI estimate tailored to your area.</p>
+  </div>
+
+  <div class="cities-grid">
+    {cities.map(city => (
+      <a href={`/areas/${city.slug}`} class="city-card">
+        <div class="city-card-top">
+          <div class="city-icon">📍</div>
+          <div>
+            <div class="city-name">{city.name}</div>
+            <div class="city-state">{city.state} — {cityClimateMap[city.slug]}</div>
+          </div>
+        </div>
+        <div class="city-note">{city.localNote}</div>
+        <span class="city-services-count">{services.length} services available →</span>
+      </a>
+    ))}
+  </div>
+
+  <!-- Services Section -->
+  <div class="section-header">
+    <h2>🌵 Browse by Service</h2>
+    <p>Select a service to see which cities we cover and get a location-specific estimate.</p>
+  </div>
+
+  <div class="services-grid">
+    {services.map(service => (
+      <div class="service-card">
+        <div class="service-emoji">{service.emoji}</div>
+        <div class="service-name">{service.name}</div>
+        <div class="service-category">{service.category}</div>
+        <div class="service-price">Starting from {service.startingPrice}</div>
+        <div class="service-cities">
+          {cities.slice(0, 6).map(city => (
+            <a href={`/areas/${city.slug}/${service.slug}`} class="service-city-link">{city.name}</a>
+          ))}
+          {cities.length > 6 && (
+            <span style="font-size:0.75rem;color:var(--muted);padding:3px 4px">+{cities.length - 6} more</span>
+          )}
+        </div>
+      </div>
+    ))}
+  </div>
+
+  <!-- CTA Banner -->
+  <div class="cta-banner">
+    <h2>Not Sure Where to Start?</h2>
+    <p>Get a free AI-powered estimate for your Las Vegas Valley property in under 2 minutes.</p>
+    <div class="cta-btns">
+      <a href="/#estimate" class="btn-gold">🌵 Get a Free Estimate</a>
+      <a href="tel:7025288324" class="btn-outline">📞 Call (702) 528-8324</a>
+    </div>
+  </div>
+
+</main>
+
+<!-- Footer -->
+<footer style="background: var(--g900); color: rgba(255,255,255,0.7); text-align:center; padding: 24px; font-size: 0.8rem; margin-top: 0;">
+  <div style="margin-bottom:8px">
+    <a href="/areas" style="color:rgba(255,255,255,0.6);text-decoration:none;margin:0 8px">All Service Areas</a>
+    <a href="/" style="color:rgba(255,255,255,0.6);text-decoration:none;margin:0 8px">Home</a>
+    <a href="tel:7025288324" style="color:var(--gold2);text-decoration:none;font-weight:700;margin:0 8px">(702) 528-8324</a>
+  </div>
+  © {new Date().getFullYear()} Las Vegas Landscaping — Licensed • Insured
+</footer>
+
+</body>
+</html>

@@ -1,0 +1,257 @@
+---
+export const prerender = false;
+import { getAllLeads } from '../../lib/db.js';
+
+const leads = getAllLeads();
+
+const statusColors = {
+  new:       { bg: '#eff6ff', text: '#1d4ed8', label: 'New' },
+  contacted: { bg: '#fefce8', text: '#a16207', label: 'Contacted' },
+  quoted:    { bg: '#fff7ed', text: '#c2410c', label: 'Quoted' },
+  won:       { bg: '#f0fdf4', text: '#166534', label: 'Won' },
+  lost:      { bg: '#f9fafb', text: '#6b7280', label: 'Lost' },
+};
+
+const stats = {
+  total:     leads.length,
+  new:       leads.filter(l => l.status === 'new').length,
+  contacted: leads.filter(l => l.status === 'contacted').length,
+  won:       leads.filter(l => l.status === 'won').length,
+};
+
+function fmtDate(iso) {
+  return new Date(iso).toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric' });
+}
+function fmtTime(iso) {
+  return new Date(iso).toLocaleTimeString('en-US', { hour: 'numeric', minute: '2-digit' });
+}
+---
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Admin Dashboard — Las Vegas Landscaping</title>
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+    body { font-family: 'Segoe UI', system-ui, sans-serif; background: #f4f6f8; color: #1a1a1a; }
+
+    /* ── Header ── */
+    .header {
+      background: #1a4731;
+      padding: 0 32px;
+      height: 60px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+    }
+    .header-logo { display: flex; align-items: center; gap: 10px; color: #fff; text-decoration: none; font-weight: 700; }
+    .header-logo span { font-size: 1.3rem; }
+    .header-right { display: flex; align-items: center; gap: 16px; }
+    .header-user { color: rgba(255,255,255,0.7); font-size: 0.85rem; }
+    .btn-logout {
+      background: rgba(255,255,255,0.15);
+      color: #fff;
+      border: 1px solid rgba(255,255,255,0.25);
+      border-radius: 6px;
+      padding: 6px 14px;
+      font-size: 0.8rem;
+      cursor: pointer;
+    }
+    .btn-logout:hover { background: rgba(255,255,255,0.25); }
+
+    /* ── Main ── */
+    .main { max-width: 1280px; margin: 0 auto; padding: 32px 24px; }
+    .page-title { font-size: 1.6rem; font-weight: 700; margin-bottom: 6px; }
+    .page-sub   { color: #666; font-size: 0.875rem; margin-bottom: 28px; }
+
+    /* ── Stats ── */
+    .stats { display: grid; grid-template-columns: repeat(4, 1fr); gap: 16px; margin-bottom: 32px; }
+    .stat-card {
+      background: #fff;
+      border-radius: 12px;
+      padding: 20px 24px;
+      box-shadow: 0 1px 4px rgba(0,0,0,0.07);
+    }
+    .stat-label { font-size: 0.75rem; color: #888; text-transform: uppercase; letter-spacing: 0.05em; margin-bottom: 6px; }
+    .stat-value { font-size: 2rem; font-weight: 700; }
+    .stat-new       .stat-value { color: #1d4ed8; }
+    .stat-contacted .stat-value { color: #a16207; }
+    .stat-won       .stat-value { color: #166534; }
+
+    /* ── Table ── */
+    .table-wrap {
+      background: #fff;
+      border-radius: 12px;
+      box-shadow: 0 1px 4px rgba(0,0,0,0.07);
+      overflow: hidden;
+    }
+    .table-header {
+      padding: 18px 24px;
+      border-bottom: 1px solid #f0f0f0;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+    }
+    .table-title { font-weight: 700; font-size: 1rem; }
+    table { width: 100%; border-collapse: collapse; }
+    th {
+      text-align: left;
+      font-size: 0.72rem;
+      color: #888;
+      text-transform: uppercase;
+      letter-spacing: 0.05em;
+      padding: 12px 16px;
+      border-bottom: 1px solid #f0f0f0;
+      background: #fafafa;
+    }
+    td {
+      padding: 14px 16px;
+      font-size: 0.875rem;
+      border-bottom: 1px solid #f9f9f9;
+      vertical-align: middle;
+    }
+    tr:last-child td { border-bottom: none; }
+    tr:hover td { background: #fafdf9; }
+    .badge {
+      display: inline-flex;
+      align-items: center;
+      gap: 4px;
+      padding: 3px 10px;
+      border-radius: 20px;
+      font-size: 0.72rem;
+      font-weight: 600;
+    }
+    .name-cell { font-weight: 600; }
+    .phone-cell { color: #555; font-size: 0.8rem; }
+    .addr-cell { color: #777; font-size: 0.78rem; max-width: 180px; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+    .view-btn {
+      background: #1a4731;
+      color: #fff;
+      border: none;
+      border-radius: 6px;
+      padding: 6px 14px;
+      font-size: 0.78rem;
+      font-weight: 600;
+      cursor: pointer;
+      text-decoration: none;
+      display: inline-block;
+    }
+    .view-btn:hover { background: #2d6b4e; }
+    .empty {
+      text-align: center;
+      padding: 64px 24px;
+      color: #888;
+    }
+    .empty-icon { font-size: 2.5rem; margin-bottom: 12px; }
+    .empty h3 { font-size: 1.1rem; color: #555; margin-bottom: 6px; }
+    .empty p { font-size: 0.875rem; }
+
+    @media (max-width: 768px) {
+      .stats { grid-template-columns: repeat(2, 1fr); }
+      .hide-mobile { display: none; }
+    }
+  </style>
+</head>
+<body>
+
+  <header class="header">
+    <a class="header-logo" href="/admin">
+      <span>🌵</span> Las Vegas Landscaping — Admin
+    </a>
+    <div class="header-right">
+      <span class="header-user">Leads Dashboard</span>
+      <button class="btn-logout" id="logout-btn">Sign Out</button>
+    </div>
+  </header>
+
+  <main class="main">
+    <h1 class="page-title">Leads Dashboard</h1>
+    <p class="page-sub">All customer estimate requests, newest first.</p>
+
+    <!-- Stats -->
+    <div class="stats">
+      <div class="stat-card">
+        <div class="stat-label">Total Leads</div>
+        <div class="stat-value">{stats.total}</div>
+      </div>
+      <div class="stat-card stat-new">
+        <div class="stat-label">New</div>
+        <div class="stat-value">{stats.new}</div>
+      </div>
+      <div class="stat-card stat-contacted">
+        <div class="stat-label">Contacted</div>
+        <div class="stat-value">{stats.contacted}</div>
+      </div>
+      <div class="stat-card stat-won">
+        <div class="stat-label">Won</div>
+        <div class="stat-value">{stats.won}</div>
+      </div>
+    </div>
+
+    <!-- Leads table -->
+    <div class="table-wrap">
+      <div class="table-header">
+        <div class="table-title">All Leads ({leads.length})</div>
+      </div>
+
+      {leads.length === 0 ? (
+        <div class="empty">
+          <div class="empty-icon">📋</div>
+          <h3>No leads yet</h3>
+          <p>Leads will appear here once customers submit estimate requests.</p>
+        </div>
+      ) : (
+        <table>
+          <thead>
+            <tr>
+              <th>Date / Time</th>
+              <th>Customer</th>
+              <th>Service</th>
+              <th>City</th>
+              <th class="hide-mobile">Address</th>
+              <th>Status</th>
+              <th></th>
+            </tr>
+          </thead>
+          <tbody>
+            {leads.map(lead => {
+              const sc = statusColors[lead.status] || statusColors.new;
+              return (
+                <tr>
+                  <td>
+                    <div style="font-size:0.85rem;font-weight:500">{fmtDate(lead.created_at)}</div>
+                    <div style="font-size:0.75rem;color:#aaa">{fmtTime(lead.created_at)}</div>
+                  </td>
+                  <td>
+                    <div class="name-cell">{lead.first_name} {lead.last_name}</div>
+                    <div class="phone-cell">{lead.phone}</div>
+                  </td>
+                  <td>{lead.service}</td>
+                  <td>{lead.city}</td>
+                  <td class="addr-cell hide-mobile">{lead.address || '—'}</td>
+                  <td>
+                    <span class="badge" style={`background:${sc.bg};color:${sc.text}`}>
+                      {sc.label}
+                    </span>
+                  </td>
+                  <td>
+                    <a class="view-btn" href={`/admin/lead/${lead.id}`}>View Quote →</a>
+                  </td>
+                </tr>
+              );
+            })}
+          </tbody>
+        </table>
+      )}
+    </div>
+  </main>
+
+  <script>
+    document.getElementById('logout-btn').addEventListener('click', async () => {
+      await fetch('/api/admin/logout', { method: 'POST' });
+      window.location.href = '/admin/login';
+    });
+  </script>
+</body>
+</html>
