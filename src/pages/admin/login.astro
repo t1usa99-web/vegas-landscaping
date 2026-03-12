@@ -97,11 +97,13 @@ if (verifySession(cookie?.value)) {
     </div>
 
     <h1>Sign In</h1>
-    <p>Enter your admin password to view leads.</p>
+    <p>Enter your admin email and password to view leads.</p>
 
     <div class="error" id="error-msg"></div>
 
     <form id="login-form">
+      <label for="email">Email</label>
+      <input type="email" id="email" placeholder="admin@example.com" autocomplete="username" required />
       <label for="password">Password</label>
       <input type="password" id="password" placeholder="Enter admin password" autocomplete="current-password" required />
       <button class="btn" type="submit" id="btn">Sign In →</button>
@@ -113,6 +115,7 @@ if (verifySession(cookie?.value)) {
       e.preventDefault();
       const btn = document.getElementById('btn');
       const errEl = document.getElementById('error-msg');
+      const email    = document.getElementById('email').value;
       const password = document.getElementById('password').value;
 
       btn.disabled = true;
@@ -123,7 +126,7 @@ if (verifySession(cookie?.value)) {
         const res = await fetch('/api/admin/login', {
           method: 'POST',
           headers: { 'Content-Type': 'application/json' },
-          body: JSON.stringify({ password }),
+          body: JSON.stringify({ email, password }),
         });
         const data = await res.json();
 

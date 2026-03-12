@@ -1,12 +1,12 @@
-import { checkPassword, createSession } from '../../../lib/db.js';
+import { checkCredentials, createSession } from '../../../lib/db.js';
 
 export const prerender = false;
 
 export async function POST({ request, cookies, redirect }) {
   const body = await request.json().catch(() => ({}));
-  const { password } = body;
+  const { email, password } = body;
 
-  if (!checkPassword(password)) {
+  if (!checkCredentials(email, password)) {
     return new Response(JSON.stringify({ error: 'Invalid password' }), {
       status: 401,
       headers: { 'Content-Type': 'application/json' },

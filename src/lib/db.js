@@ -135,11 +135,13 @@ export function verifySession(token) {
 }
 
 /**
- * Check if the plain-text password matches ADMIN_PASSWORD env var.
+ * Check if the email + password match the ADMIN_EMAIL / ADMIN_PASSWORD env vars.
  */
-export function checkPassword(password) {
-  const correct = (typeof import.meta !== 'undefined' && import.meta.env?.ADMIN_PASSWORD)
+export function checkCredentials(email, password) {
+  const correctEmail    = (typeof import.meta !== 'undefined' && import.meta.env?.ADMIN_EMAIL)
+    || process.env.ADMIN_EMAIL;
+  const correctPassword = (typeof import.meta !== 'undefined' && import.meta.env?.ADMIN_PASSWORD)
     || process.env.ADMIN_PASSWORD;
-  if (!correct) return false;
-  return password === correct;
+  if (!correctEmail || !correctPassword) return false;
+  return email === correctEmail && password === correctPassword;
 }
