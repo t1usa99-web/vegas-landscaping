@@ -75,7 +75,14 @@ const SITE = 'https://lasvegaslandscaping.homepropeople.com';
     .header-cta:hover{background:var(--gold2)}
     .lang-switch{color:rgba(255,255,255,0.6);font-size:0.8rem;border:1px solid rgba(255,255,255,0.2);padding:4px 10px;border-radius:5px}
     .lang-switch:hover{color:white;border-color:rgba(255,255,255,0.5)}
-    @media(max-width:700px){.header-nav{display:none}}
+    .nav-toggle{display:none;flex-direction:column;gap:5px;background:none;border:none;cursor:pointer;padding:4px;margin-left:auto}
+    .nav-toggle span{display:block;width:22px;height:2px;background:white;border-radius:2px;transition:all 0.2s}
+    .mobile-nav{display:none;flex-direction:column;background:var(--g900);border-top:1px solid rgba(255,255,255,0.1)}
+    .mobile-nav.open{display:flex}
+    .mnav-link{color:rgba(255,255,255,0.85);text-decoration:none;padding:14px 24px;font-weight:500;border-bottom:1px solid rgba(255,255,255,0.06);transition:background 0.15s}
+    .mnav-link:hover{background:rgba(255,255,255,0.05)}
+    .mnav-phone{color:var(--gold2);font-weight:700;padding:16px 24px;text-decoration:none;font-size:1rem}
+    @media(max-width:700px){.header-nav,.header-cta{display:none}.nav-toggle{display:flex}}
 
     /* Hero */
     .hero{background:linear-gradient(135deg,var(--g900) 0%,var(--g800) 60%,#1f5c3a 100%);color:white;padding:80px 24px 72px;text-align:center;position:relative;overflow:hidden}
@@ -262,6 +269,18 @@ const SITE = 'https://lasvegaslandscaping.homepropeople.com';
       <a href="/" class="lang-switch">🇺🇸 English</a>
     </nav>
     <a href="tel:7025288324" class="header-cta">📞 (702) 528-8324</a>
+    <button class="nav-toggle" id="nav-toggle" aria-label="Abrir menú" aria-expanded="false">
+      <span></span><span></span><span></span>
+    </button>
+  </div>
+  <!-- Mobile nav -->
+  <div class="mobile-nav" id="mobile-nav" aria-hidden="true">
+    <a href="#servicios" class="mnav-link">Servicios</a>
+    <a href="#areas" class="mnav-link">Áreas de Servicio</a>
+    <a href="#proyectos" class="mnav-link">Proyectos</a>
+    <a href="#faq" class="mnav-link">Preguntas</a>
+    <a href="/" class="mnav-link">🇺🇸 English</a>
+    <a href="tel:7025288324" class="mnav-phone">(702) 528-8324</a>
   </div>
 </header>
 
@@ -646,6 +665,23 @@ const SITE = 'https://lasvegaslandscaping.homepropeople.com';
 </footer>
 
 <script is:inline>
+// Mobile nav toggle
+(function() {
+  const toggle = document.getElementById('nav-toggle');
+  const nav = document.getElementById('mobile-nav');
+  if (!toggle || !nav) return;
+  toggle.addEventListener('click', () => {
+    const open = nav.classList.toggle('open');
+    toggle.setAttribute('aria-expanded', open ? 'true' : 'false');
+    nav.setAttribute('aria-hidden', open ? 'false' : 'true');
+  });
+  nav.querySelectorAll('a').forEach(a => a.addEventListener('click', () => {
+    nav.classList.remove('open');
+    toggle.setAttribute('aria-expanded','false');
+    nav.setAttribute('aria-hidden','true');
+  }));
+})();
+
 // Radio selection highlight
 document.querySelectorAll('.radio-group').forEach(group => {
   group.querySelectorAll('.radio-item').forEach(item => {
