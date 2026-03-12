@@ -1,6 +1,11 @@
 ---
 export const prerender = false;
-import { getLeadById } from '../../../lib/db.js';
+import { getLeadById, verifySession } from '../../../lib/db.js';
+
+const sessionCookie = Astro.cookies.get('admin_session');
+if (!verifySession(sessionCookie?.value)) {
+  return Astro.redirect('/admin/login');
+}
 
 const { id } = Astro.params;
 const lead = getLeadById(id);
