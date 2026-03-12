@@ -1,0 +1,223 @@
+---
+export const prerender = true;
+---
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Contact Us — Las Vegas Landscaping</title>
+  <meta name="description" content="Have questions about our free landscaping estimate service? Contact Las Vegas Landscaping or submit a request to be connected with a local contractor." />
+  <meta name="robots" content="index, follow" />
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet" />
+  <style>
+    :root {
+      --g900: #0f2a1e; --g800: #1a4731; --g700: #2d6b4e; --g600: #3d8c62;
+      --g100: #e8f4ee; --g50: #f4faf6;
+      --gold: #d4a017; --gold2: #f0c040;
+      --text: #1a1a1a; --muted: #6b7280; --border: #e2e8f0;
+      --radius: 12px;
+    }
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+    body { font-family: 'Inter', sans-serif; color: var(--text); background: #fff; line-height: 1.6; }
+    a { color: inherit; }
+
+    /* Header */
+    .site-header { background: var(--g900); padding: 0 24px; position: sticky; top: 0; z-index: 100; }
+    .header-inner { max-width: 1100px; margin: 0 auto; display: flex; align-items: center; justify-content: space-between; height: 60px; gap: 16px; }
+    .logo { display: flex; align-items: center; gap: 10px; text-decoration: none; }
+    .logo-text-wrap .logo-name { font-weight: 800; font-size: 1rem; color: white; display: block; }
+    .logo-text-wrap .logo-sub { font-size: 0.7rem; color: rgba(255,255,255,0.55); }
+    nav { display: flex; align-items: center; gap: 20px; }
+    nav a { color: rgba(255,255,255,0.75); text-decoration: none; font-size: 0.875rem; font-weight: 500; }
+    nav a:hover { color: white; }
+    .btn-call { background: var(--gold); color: var(--g900) !important; padding: 8px 16px; border-radius: 6px; font-weight: 700 !important; font-size: 0.8rem !important; white-space: nowrap; }
+
+    /* Hero */
+    .hero { background: linear-gradient(135deg, var(--g900) 0%, var(--g800) 60%, var(--g700) 100%); color: white; padding: 72px 24px 60px; text-align: center; }
+    .hero-eyebrow { display: inline-flex; align-items: center; gap: 8px; background: rgba(240,192,64,0.15); border: 1px solid rgba(240,192,64,0.3); color: var(--gold2); font-size: 0.8rem; font-weight: 600; padding: 6px 14px; border-radius: 20px; margin-bottom: 20px; letter-spacing: 0.05em; text-transform: uppercase; }
+    .hero h1 { font-size: clamp(1.8rem, 4vw, 2.8rem); font-weight: 800; line-height: 1.2; margin-bottom: 16px; }
+    .hero p { font-size: 1.05rem; color: rgba(255,255,255,0.8); max-width: 600px; margin: 0 auto; }
+
+    /* Content */
+    .content { max-width: 860px; margin: 0 auto; padding: 60px 24px; }
+    .section { margin-bottom: 48px; }
+    .section h2 { font-size: 1.4rem; font-weight: 700; color: var(--g800); margin-bottom: 16px; }
+    .section p { color: #444; margin-bottom: 14px; font-size: 0.975rem; }
+
+    /* Contact card */
+    .contact-cards { display: grid; grid-template-columns: repeat(auto-fit, minmax(240px, 1fr)); gap: 16px; margin-top: 16px; }
+    .contact-card { background: var(--g50); border: 1px solid var(--g100); border-radius: var(--radius); padding: 24px; display: flex; align-items: flex-start; gap: 14px; }
+    .contact-icon { font-size: 1.5rem; flex-shrink: 0; }
+    .contact-label { font-size: 0.72rem; font-weight: 700; text-transform: uppercase; letter-spacing: 0.06em; color: var(--muted); margin-bottom: 4px; }
+    .contact-value { font-size: 1rem; font-weight: 700; color: var(--g800); text-decoration: none; }
+    .contact-value:hover { color: var(--g700); }
+
+    /* Disclosure */
+    .disclosure { background: #fff8e1; border: 2px solid var(--gold); border-radius: var(--radius); padding: 20px 24px; margin-bottom: 40px; }
+    .disclosure-label { font-size: 0.7rem; font-weight: 700; text-transform: uppercase; letter-spacing: 0.08em; color: var(--gold); margin-bottom: 8px; }
+    .disclosure p { color: #4a3800; font-size: 0.9rem; margin: 0; }
+
+    /* FAQ */
+    .faq-list { margin-top: 16px; display: flex; flex-direction: column; gap: 12px; }
+    .faq-item { border: 1px solid var(--border); border-radius: var(--radius); overflow: hidden; }
+    .faq-q { width: 100%; text-align: left; background: none; border: none; padding: 16px 20px; font-size: 0.9rem; font-weight: 600; color: var(--g800); cursor: pointer; display: flex; justify-content: space-between; align-items: center; gap: 12px; }
+    .faq-q:hover { background: var(--g50); }
+    .faq-a { display: none; padding: 0 20px 16px; font-size: 0.875rem; color: #444; line-height: 1.6; }
+    .faq-item.open .faq-a { display: block; }
+    .faq-icon { font-size: 1.2rem; font-weight: 400; flex-shrink: 0; }
+
+    /* CTA */
+    .cta-section { background: linear-gradient(135deg, var(--g900), var(--g700)); border-radius: 16px; padding: 48px 32px; text-align: center; color: white; }
+    .cta-section h2 { font-size: 1.6rem; font-weight: 800; margin-bottom: 12px; }
+    .cta-section p { color: rgba(255,255,255,0.75); margin-bottom: 28px; font-size: 0.975rem; }
+    .btn-primary { display: inline-block; background: var(--gold); color: var(--g900); padding: 14px 32px; border-radius: 8px; font-weight: 700; font-size: 1rem; text-decoration: none; }
+    .btn-primary:hover { background: var(--gold2); }
+
+    /* Footer */
+    footer { background: var(--g900); color: rgba(255,255,255,0.6); text-align: center; padding: 28px 24px; font-size: 0.8rem; }
+    footer a { color: var(--gold2); text-decoration: none; font-weight: 600; margin: 0 8px; }
+    .footer-links { margin: 10px 0; }
+  </style>
+</head>
+<body>
+
+<header class="site-header">
+  <div class="header-inner">
+    <a href="/" class="logo">
+      <svg width="32" height="32" viewBox="0 0 38 38" fill="none" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
+        <circle cx="19" cy="19" r="19" fill="#2d6b4e"/>
+        <path d="M19 8C13 8 8 13 8 19s5 11 11 11c1.8 0 3.5-.5 5-1.3L19 24l-3-6 6-3 3 6-3 3.7C25.5 23 27 21 27 19c0-6-4-10.5-8-11z" fill="white"/>
+        <path d="M19 8c.7 3 1.8 10-3 14.5" stroke="#d4a017" stroke-width="2" stroke-linecap="round" fill="none"/>
+      </svg>
+      <div class="logo-text-wrap">
+        <span class="logo-name">Las Vegas Landscaping</span>
+        <span class="logo-sub">Licensed • Insured</span>
+      </div>
+    </a>
+    <nav>
+      <a href="/">Home</a>
+      <a href="/areas">Service Areas</a>
+      <a href="tel:7025288324" class="btn-call">📞 (702) 528-8324</a>
+    </nav>
+  </div>
+</header>
+
+<!-- Hero -->
+<section class="hero">
+  <div class="hero-eyebrow">💬 Get in Touch</div>
+  <h1>Contact Us</h1>
+  <p>Have a question? We're here to help. Or skip ahead and submit an estimate request to be connected with a local contractor.</p>
+</section>
+
+<div class="content">
+
+  <!-- Disclosure -->
+  <div class="disclosure">
+    <div class="disclosure-label">⚠ Please Note</div>
+    <p><strong>Las Vegas Landscaping is a lead generation service.</strong> Submitting a request on this website connects you with a local licensed landscaping contractor — not our office. If you want to reach a contractor directly, please use the phone number below. If you have questions about the website or this service, use the email below.</p>
+  </div>
+
+  <!-- Contact info -->
+  <div class="section">
+    <h2>Contact Information</h2>
+    <div class="contact-cards">
+      <div class="contact-card">
+        <div class="contact-icon">📞</div>
+        <div>
+          <div class="contact-label">Phone</div>
+          <a href="tel:7025288324" class="contact-value">(702) 528-8324</a>
+        </div>
+      </div>
+      <div class="contact-card">
+        <div class="contact-icon">✉️</div>
+        <div>
+          <div class="contact-label">Email</div>
+          <a href="mailto:info@lasvegaslandscaping.homepropeople.com" class="contact-value">info@lasvegaslandscaping<br>.homepropeople.com</a>
+        </div>
+      </div>
+      <div class="contact-card">
+        <div class="contact-icon">📍</div>
+        <div>
+          <div class="contact-label">Service Area</div>
+          <span class="contact-value" style="font-weight:600;font-size:0.9rem">Las Vegas Valley, NV<br>All surrounding communities</span>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- FAQ -->
+  <div class="section">
+    <h2>Frequently Asked Questions</h2>
+    <div class="faq-list">
+      <div class="faq-item">
+        <button class="faq-q" aria-expanded="false">What happens after I submit a request?<span class="faq-icon">+</span></button>
+        <div class="faq-a"><p>After you submit your estimate request, our system generates an instant AI-powered estimate and notifies a local licensed landscaping contractor in your area. The contractor will contact you — typically by phone or text — to schedule a free on-site consultation and give you an accurate quote.</p></div>
+      </div>
+      <div class="faq-item">
+        <button class="faq-q" aria-expanded="false">Who will call me?<span class="faq-icon">+</span></button>
+        <div class="faq-a"><p>A local licensed landscaping contractor based in the Las Vegas Valley will contact you. This is not our company calling — it is an independent contractor who serves your area. They are licensed and insured to perform landscaping work in Nevada.</p></div>
+      </div>
+      <div class="faq-item">
+        <button class="faq-q" aria-expanded="false">Is the service really free?<span class="faq-icon">+</span></button>
+        <div class="faq-a"><p>Yes, entirely. Submitting a request, receiving the AI estimate, and connecting with a local contractor are all completely free. There is no obligation and no fee to use this website.</p></div>
+      </div>
+      <div class="faq-item">
+        <button class="faq-q" aria-expanded="false">Is the AI estimate the final price?<span class="faq-icon">+</span></button>
+        <div class="faq-a"><p>No. The AI estimate is a ballpark range based on the information you provide and general Las Vegas market pricing. The actual price will be determined by the contractor after an on-site visit, where they can assess the full scope of work.</p></div>
+      </div>
+      <div class="faq-item">
+        <button class="faq-q" aria-expanded="false">How do I opt out of contractor contact?<span class="faq-icon">+</span></button>
+        <div class="faq-a"><p>If you submitted a request and no longer wish to be contacted, please email us at info@lasvegaslandscaping.homepropeople.com with your name and phone number and we will remove you from our records.</p></div>
+      </div>
+    </div>
+  </div>
+
+  <!-- CTA -->
+  <div class="cta-section">
+    <h2>Ready for a Free Estimate?</h2>
+    <p>Submit your project details and a local contractor will reach out to schedule a free quote.</p>
+    <a href="/" class="btn-primary">Request a Free Estimate →</a>
+  </div>
+
+</div>
+
+<footer>
+  <div>
+    <a href="/">Home</a>
+    <a href="/areas">Service Areas</a>
+    <a href="/rebate-calculator">Rebate Calculator</a>
+    <a href="tel:7025288324">(702) 528-8324</a>
+  </div>
+  <div class="footer-links">
+    <a href="/about">About</a>
+    <a href="/contact">Contact</a>
+    <a href="/privacy-policy">Privacy Policy</a>
+    <a href="/terms">Terms of Service</a>
+  </div>
+  &copy; {new Date().getFullYear()} Las Vegas Landscaping — Licensed &bull; Bonded &bull; Insured &bull; Nevada AB356 Compliant
+</footer>
+
+<script is:inline>
+  document.querySelectorAll('.faq-q').forEach(btn => {
+    btn.addEventListener('click', () => {
+      const item = btn.closest('.faq-item');
+      const isOpen = item.classList.contains('open');
+      document.querySelectorAll('.faq-item.open').forEach(el => {
+        el.classList.remove('open');
+        el.querySelector('.faq-q').setAttribute('aria-expanded', 'false');
+        el.querySelector('.faq-icon').textContent = '+';
+      });
+      if (!isOpen) {
+        item.classList.add('open');
+        btn.setAttribute('aria-expanded', 'true');
+        btn.querySelector('.faq-icon').textContent = '−';
+      }
+    });
+  });
+</script>
+
+</body>
+</html>
